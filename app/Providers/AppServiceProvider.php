@@ -22,13 +22,10 @@ class AppServiceProvider extends ServiceProvider
      * Bootstrap any application services.
      */
  
-public function boot()
-{
-    view()->composer('*', function ($view) {
-        if (Auth::check()) {
-            $expiresAt = now()->addMinutes(5);
-            Cache::put('user-is-online-' . Auth::id(), true, $expiresAt);
+ public function boot(UrlGenerator $url)
+    {
+        if (env('APP_ENV') === 'production') {
+            $url->forceScheme('https');
         }
-    });
-}
+    }
 }
