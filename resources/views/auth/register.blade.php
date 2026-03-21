@@ -2,7 +2,7 @@
 
 @section('content')
 <!-- Conteneur principal : Padding-top réduit sur mobile (pt-20) et large sur PC (md:pt-32) -->
-<div class="min-h-screen bg-gray-50 pt-20 pb-10 md:pt-32 px-4">
+<div class="min-h-screen  pt-20 pb-10 md:pt-32 px-4">
     
     <div class="flex justify-center items-center">
         <!-- Card du formulaire : max-w-md sur PC, occupe presque tout l'écran sur mobile -->
