@@ -33,14 +33,14 @@
                     <div>
                         <label for="firstname" class="block text-sm font-semibold text-gray-700">Prénom</label>
                         <input type="text" id="firstname" name="firstname" value="{{ old('firstname') }}" required 
-                            class="mt-1 block w-full px-3 py-2 border border-gray-700 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500 sm:text-sm"
+                            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500 sm:text-sm text-gray-600"
                             placeholder="Kodzo">
                     </div>
 
                     <div>
                         <label for="lastname" class="block text-sm font-semibold text-gray-700">Nom</label>
                         <input type="text" id="lastname" name="lastname" value="{{ old('lastname') }}" required 
-                            class="mt-1 block w-full px-3 py-2 border border-gray-700 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500 sm:text-sm"
+                            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500 sm:text-sm text-gray-600"
                             placeholder="YAYA">
                     </div>
                 </div>
@@ -49,7 +49,7 @@
                 <div>
                     <label for="email" class="block text-sm font-semibold text-gray-700">Adresse Email</label>
                     <input type="email" id="email" name="email" value="{{ old('email') }}" required 
-                        class="mt-1 block w-full px-3 py-2 border border-gray-700 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500 sm:text-sm"
+                        class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500 sm:text-sm text-gray-600"
                         placeholder="votre@email.com">
                 </div>
 
@@ -57,7 +57,7 @@
                 <div>
                     <label for="role" class="block text-sm font-semibold text-gray-700">Rôle / Fonction</label>
                     <select id="role" name="role" required 
-                        class="mt-1 block w-full px-3 py-2 border border-gray-700 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500 sm:text-sm bg-white">
+                        class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500 sm:text-sm text-gray-600 bg-white">
                         <option value="" disabled selected>Sélectionnez un rôle</option>
                         <option value="admin" {{ old('role') == 'admin' ? 'selected' : '' }}>Administrateur</option>
                         <option value="gerant" {{ old('role') == 'gerant' ? 'selected' : '' }}>Gérant</option>
@@ -70,14 +70,14 @@
                     <div>
                         <label for="password" class="block text-sm font-semibold text-gray-700">Mot de passe</label>
                         <input type="password" id="password" name="password" required 
-                            class="mt-1 block w-full px-3 py-2 border border-gray-700 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500 sm:text-sm"
+                            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500 sm:text-sm text-gray-600"
                             placeholder="••••••••">
                     </div>
 
                     <div>
                         <label for="password_confirmation" class="block text-sm font-semibold text-gray-700">Confirmer</label>
                         <input type="password" id="password_confirmation" name="password_confirmation" required 
-                            class="mt-1 block w-full px-3 py-2 border border-gray-700 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500 sm:text-sm"
+                            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500 sm:text-sm text-gray-600"
                             placeholder="••••••••">
                     </div>
                 </div>
