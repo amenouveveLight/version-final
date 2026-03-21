@@ -3,10 +3,10 @@
 @section('content')
 <div class="min-h-screen bg-green-600 flex flex-col justify-center py-12 sm:px-6 lg:px-8 pt-28">
     <div class="sm:mx-auto sm:w-full sm:max-w-md md:max-w-2xl">
-        <h2 class="text-center text-3xl font-extrabold text-gray-900">
+        <h2 class="text-center text-3xl font-extrabold text-white-900">
             Créer un compte professionnel
         </h2>
-        <p class="mt-2 text-center text-sm text-gray-600 font-medium">
+        <p class="mt-2 text-center text-sm text-white-600 font-medium">
             Accès réservé aux administrateurs, gérants et agents.
         </p>
     </div>
