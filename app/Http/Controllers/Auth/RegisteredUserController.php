@@ -28,7 +28,7 @@ class RegisteredUserController extends Controller
      *
      * @throws \Illuminate\Validation\ValidationException
      */
- PHP
+
 public function store(Request $request)
     {
          $request->validate([
