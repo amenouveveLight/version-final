@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="min-h-screen bg-green-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8 pt-28">
+<div class="min-h-screen bg-green-600 flex flex-col justify-center py-12 sm:px-6 lg:px-8 pt-28">
     <div class="sm:mx-auto sm:w-full sm:max-w-md md:max-w-2xl">
         <h2 class="text-center text-3xl font-extrabold text-gray-900">
             Créer un compte professionnel
