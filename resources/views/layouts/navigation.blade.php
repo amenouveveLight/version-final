@@ -200,12 +200,13 @@ body:not(:has(:target)) .tabs a[href="#tab-daily"] {
                      <a href="{{ url('/entres') }}" class="text-gray-800 hover:text-green-600 font-semibold" translate="no"> Entrées</a>
                     <a href="{{ url('/sorties') }}" class="text-gray-800 hover:text-green-600 font-semibold">Sorties</a>
                     <a href="{{ url('/recent') }}" class="text-gray-800 hover:text-green-600 font-semibold">Activités</a>
+                      <a href="{{ url('/tarifs') }}" class="text-gray-800 hover:text-green-600 font-semibold">Tarifs</a>
                     <a href="{{ url('/dashboard') }}" class="text-gray-800 hover:text-green-600 font-semibold">Rapports</a>
                 @endif
 
                 {{-- Admin uniquement --}}
                 @if(Auth::user()->isAdmin())
-                      <a href="{{ url('/entres') }}" class="text-gray-800 hover:text-green-600 font-semibold" translate="no"> Entrées</a>
+
                      <a href="{{ url('/utilisateurs') }}" class="text-gray-800 hover:text-green-600 font-semibold" translate="no"> Utilisateurs</a>
                     <a href="{{ url('/tarifs') }}" class="text-gray-800 hover:text-green-600 font-semibold">Tarifs</a>
                     <a href="{{ url('/recent') }}" class="text-gray-800 hover:text-green-600 font-semibold">Activités</a>

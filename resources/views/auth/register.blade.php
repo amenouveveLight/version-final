@@ -13,7 +13,15 @@
 
     <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-md md:max-w-2xl">
         <div class="bg-white py-8 px-4 shadow-xl border border-gray-100 sm:rounded-lg sm:px-10 mx-4 sm:mx-0">
-            
+          
+        <div class="sm:mx-auto sm:w-full sm:max-w-md md:max-w-2xl">
+        <h2 class="text-center text-3xl font-extrabold text-white-900">
+            Créer un compte professionnel
+        </h2>
+        <p class="mt-2 text-center text-sm text-white-600 font-medium">
+            Accès réservé aux administrateurs, gérants et agents.
+        </p>
+    </div>
             <!-- Affichage des erreurs de validation -->
             @if ($errors->any())
                 <div class="mb-4 bg-red-50 p-4 rounded-md border-l-4 border-red-500">

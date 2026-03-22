@@ -6,7 +6,6 @@
 <div class="pt-28">
     <!-- Ici ton contenu principal -->
 
-<body>
     <div class="mt-5">
     
   <!-- Dashboard Overview Section -->

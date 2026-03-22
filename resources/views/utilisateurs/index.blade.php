@@ -68,7 +68,7 @@
         <option value="" {{ request('role') == '' ? 'selected' : '' }}>Tous les rôles</option>
         <option value="admin" {{ request('role') == 'admin' ? 'selected' : '' }}>Administrateur</option>
         <option value="agent" {{ request('role') == 'agent' ? 'selected' : '' }}>Agent</option>
-        <option value="user" {{ request('role') == 'user' ? 'selected' : '' }}>Gerant</option>
+        <option value="user" {{ request('role') == 'gerant' ? 'selected' : '' }}>Gerant</option>
       </select>
       <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
         <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
