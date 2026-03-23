@@ -96,16 +96,15 @@
                 @endif
               </td>
                 <td class="px-3 py-4 text-sm text-center">
-<!-- Lien pour ouvrir le modal -->
 <td class="px-3 py-4 text-sm text-center">
     @if ($act['source'] === 'entree')
         <a href="{{ route('entres.show', $act['id']) }}"
            class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-blue-100 text-blue-800 hover:bg-blue-200 transition">
             Détails
         </a>
-    @else ($act['source'] === 'sortie')
+    @elseif ($act['source'] === 'sortie') {{-- <-- Changé @else par @elseif --}}
         <a href="{{ route('sorties.show', $act['id']) }}"
-           class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-blue-100 text-blue-800 hover:bg-blue-200 transition">
+           class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-orange-100 text-orange-800 hover:bg-orange-200 transition">
             Détails
         </a>
     @endif
