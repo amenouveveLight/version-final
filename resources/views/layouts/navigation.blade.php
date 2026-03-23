@@ -142,6 +142,7 @@ body:not(:has(:target)) .tabs a[href="#tab-daily"] {
                         <a href="{{ url('/entres') }}" class="hover:text-green-600">Entrées</a>
                         <a href="{{ url('/sorties') }}" class="hover:text-green-600">Sorties</a>
                         <a href="{{ url('/recent') }}" class="hover:text-green-600">Activités</a>
+                        <a href="{{ url('/dashboard') }}" class="hover:text-green-600">Rapports</a>
                     @endif
 
                     {{-- Gérant et Admin --}}
