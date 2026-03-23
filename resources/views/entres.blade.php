@@ -44,7 +44,7 @@
               <option value="motorcycle">Moto</option>
               <option value="car">Voiture</option>
               <option value="tricycle">Tricycle</option>
-              <option value="nyonyovi">Nyonyovi</option>
+              <option value="nyonyovi">Nyonyovis</option>
               <option value="minibus">Minibus</option>
               <option value="bus">Bus</option>
               <option value="truck">Camion</option>
