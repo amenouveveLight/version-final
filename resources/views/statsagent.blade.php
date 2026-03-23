@@ -6,7 +6,7 @@
 <div class="pt-28">
     <!-- Ici ton contenu principal -->
 
-<body>
+
     <div class="mt-5">
     
   <!-- Dashboard Overview Section -->
@@ -24,7 +24,7 @@
 
             <!-- Settings Section -->
           <!-- Settings Section -->
-            <section id="settings-section" class="px-4 sm:px-0 hidden">
+            <section id="settings-section" class="px-4 sm:px-0 ">
                 <div class="mb-6">
               
 <div class="container mx-auto p-4">
