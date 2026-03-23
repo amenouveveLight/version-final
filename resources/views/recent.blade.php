@@ -95,20 +95,20 @@
                   </span>
                 @endif
               </td>
-                <td class="px-3 py-4 text-sm text-center">
-<td class="px-3 py-4 text-sm text-center">
+              <td class="px-3 py-4 text-sm text-center">
     @if ($act['source'] === 'entree')
         <a href="{{ route('entres.show', $act['id']) }}"
            class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-blue-100 text-blue-800 hover:bg-blue-200 transition">
-            Détails
+            <i class="fa fa-eye mr-1"></i> Détails Entrée
         </a>
-    @elseif ($act['source'] === 'sortie') {{-- <-- Changé @else par @elseif --}}
+    @elseif ($act['source'] === 'sortie')
         <a href="{{ route('sorties.show', $act['id']) }}"
            class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-orange-100 text-orange-800 hover:bg-orange-200 transition">
-            Détails
+            <i class="fa fa-eye mr-1"></i> Détails Sortie
         </a>
     @endif
 </td>
+    
 
 
                     </td>

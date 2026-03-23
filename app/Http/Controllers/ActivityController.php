@@ -10,57 +10,34 @@ use Illuminate\Pagination\LengthAwarePaginator;
 
 class ActivityController extends Controller
 {
-    /**
-     * Détails d'une entrée
-     */
-  public function show($id)
-{
-    $entree = Entres::findOrFail($id);
+    public function show($id)
+    {
+        $entree = Entres::findOrFail($id);
+        $hasSortie = Sorties::where('plaque', $entree->plaque)
+                            ->where('created_at', '>', $entree->created_at)
+                            ->exists();
+        return view('entres.show', compact('entree', 'hasSortie'));
+    }
 
-    // Vérifier si une sortie existe pour cette entrée
-    $hasSortie = Sorties::where('plaque', $entree->plaque)
-                        ->where('created_at', '>', $entree->created_at)
-                        ->exists();
-
-    return view('entres.show', compact('entree', 'hasSortie'));
-}
-
-    /**
-     * Détails d'une sortie
-     */
     public function Sortie($id)
     {
         $sortie = Sorties::findOrFail($id);
         return view('sorties.show', compact('sortie'));
     }
 
-    /**
-     * Historique des activités
-     */
     public function activites(Request $request)
     {
         $user = auth()->user();
-
         $plaque = $request->input('plaque');
         $type   = $request->input('type');
         $periode = $this->resolvePeriode($request->input('periode'));
 
         $activites = collect();
 
-        /*
-        |--------------------------------------------------------------------------
-        | AGENT : uniquement ses actions
-        |--------------------------------------------------------------------------
-        */
         if ($user->role === 'agent') {
-
-            // Entrées
-            $entres = Entres::where('user_id', $user->id);
-            $entres = $this->applyFilters($entres, $plaque, $type, $periode)->get();
-
+            // Entrées de l'agent
+            $entres = $this->applyFilters(Entres::where('user_id', $user->id), $plaque, $type, $periode)->get();
             foreach ($entres as $entre) {
-                $t = Carbon::parse($entre->created_at);
-
                 $activites->push([
                     'id'        => $entre->id,
                     'source'    => 'entree',
@@ -68,21 +45,18 @@ class ActivityController extends Controller
                     'evenement' => 'Entrée',
                     'name'      => $entre->name ?? '-',
                     'type'      => ucfirst($entre->type),
-                    'date'      => $t->format('d/m/Y'),
-                    'entre'     => $t->format('H:i'),
+                    'date'      => $entre->created_at->format('d/m/Y H:i'),
+                    'entre'     => $entre->created_at->format('H:i'),
                     'sortie'    => '-',
                     'duree'     => '-',
                     'statut'    => 'Enregistrée',
+                    'raw_date'  => $entre->created_at, // Pour le tri
                 ]);
             }
 
-            // Sorties
-            $sorties = Sorties::where('user_id', $user->id);
-            $sorties = $this->applyFilters($sorties, $plaque, $type, $periode)->get();
-
+            // Sorties de l'agent
+            $sorties = $this->applyFilters(Sorties::where('user_id', $user->id), $plaque, $type, $periode)->get();
             foreach ($sorties as $sortie) {
-                $t = Carbon::parse($sortie->created_at);
-
                 $activites->push([
                     'id'        => $sortie->id,
                     'source'    => 'sortie',
@@ -90,65 +64,47 @@ class ActivityController extends Controller
                     'evenement' => 'Sortie',
                     'name'      => $sortie->owner_name ?? '-',
                     'type'      => ucfirst($sortie->type),
-                    'date'      => $t->format('d/m/Y'),
+                    'date'      => $sortie->created_at->format('d/m/Y H:i'),
                     'entre'     => '-',
-                    'sortie'    => $t->format('H:i'),
+                    'sortie'    => $sortie->created_at->format('H:i'),
                     'duree'     => '-',
                     'statut'    => 'Effectuée',
+                    'raw_date'  => $sortie->created_at,
                 ]);
             }
-        }
-
-        /*
-        |--------------------------------------------------------------------------
-        | ADMIN / GÉRANT : historique global
-        |--------------------------------------------------------------------------
-        */
+        } 
         else {
-
-            $entres  = $this->applyFilters(Entres::query(), $plaque, $type, $periode)->get();
-            $sorties = $this->applyFilters(Sorties::query(), $plaque, $type, $periode)
-                ->get()
-                ->groupBy('plaque');
+            // ADMIN / GÉRANT : On couple Entrée et Sortie
+            $entres = $this->applyFilters(Entres::query(), $plaque, $type, $periode)->get();
+            $sorties = Sorties::all()->groupBy('plaque');
 
             foreach ($entres as $entre) {
-                $t1 = Carbon::parse($entre->created_at);
-
                 $sortie = optional($sorties[$entre->plaque] ?? collect())
                     ->firstWhere('created_at', '>', $entre->created_at);
 
-                $t2 = $sortie ? Carbon::parse($sortie->created_at) : null;
-
                 $activites->push([
-                    'id'        => $entre->id,
-                    'source'    => 'entree',
+                    // Si sorti, on pointe vers l'ID de la sortie, sinon vers l'entrée
+                    'id'        => $sortie ? $sortie->id : $entre->id, 
+                    'source'    => $sortie ? 'sortie' : 'entree', 
                     'plaque'    => $entre->plaque,
-                    'evenement' => $sortie ? ' Sortie':'Entrée'  ,
+                    'evenement' => $sortie ? 'Sortie' : 'Entrée',
                     'name'      => $entre->name ?? '-',
                     'type'      => ucfirst($entre->type),
-                    'date'      => $t1->format('d/m/Y'),
-                    'entre'     => $t1->format('H:i'),
-                    'sortie'    => $t2 ? $t2->format('H:i') : '-',
-                    'duree'     => $t2 ? $t1->diff($t2)->format('%hh %imin') : '-',
+                    'date'      => $entre->created_at->format('d/m/Y'),
+                    'entre'     => $entre->created_at->format('H:i'),
+                    'sortie'    => $sortie ? $sortie->created_at->format('H:i') : '-',
+                    'duree'     => $sortie ? $entre->created_at->diff($sortie->created_at)->format('%hh %imin') : '-',
                     'statut'    => $sortie ? 'Complété' : 'En attente',
+                    'raw_date'  => $entre->created_at,
                 ]);
             }
         }
 
-        /*
-        |--------------------------------------------------------------------------
-        | TRI + PAGINATION
-        |--------------------------------------------------------------------------
-        */
-        $activites = $activites
-            ->sortBy(fn ($a) =>
-                strtotime($a['date'].' '.($a['entre'] !== '-' ? $a['entre'] : $a['sortie']))
-            )
-            ->values();
+        // Tri par date décroissante (les plus récents en haut)
+        $activites = $activites->sortByDesc('raw_date')->values();
 
         $page = $request->input('page', 1);
         $perPage = 15;
-
         $activites = new LengthAwarePaginator(
             $activites->forPage($page, $perPage),
             $activites->count(),
@@ -157,41 +113,20 @@ class ActivityController extends Controller
             ['path' => $request->url(), 'query' => $request->query()]
         );
 
-        return view('recent', compact(
-            'activites',
-            'plaque',
-            'type',
-            'periode'
-        ));
+        return view('recent', compact('activites', 'plaque', 'type'));
     }
 
-    /**
-     * Appliquer les filtres communs
-     */
     private function applyFilters($query, $plaque, $type, $periode)
     {
-        if ($plaque) {
-            $query->where('plaque', 'like', "%$plaque%");
-        }
-
-        if ($type) {
-            $query->where('type', $type);
-        }
-
-        if ($periode) {
-            $query->whereBetween('created_at', [$periode['from'], $periode['to']]);
-        }
-
+        if ($plaque) $query->where('plaque', 'like', "%$plaque%");
+        if ($type) $query->where('type', $type);
+        if ($periode) $query->whereBetween('created_at', [$periode['from'], $periode['to']]);
         return $query;
     }
 
-    /**
-     * Convertir la période sélectionnée
-     */
     private function resolvePeriode($periode)
     {
         if (!$periode) return null;
-
         return match ($periode) {
             'jour'    => ['from' => now()->startOfDay(),   'to' => now()->endOfDay()],
             'semaine' => ['from' => now()->startOfWeek(),  'to' => now()->endOfWeek()],
