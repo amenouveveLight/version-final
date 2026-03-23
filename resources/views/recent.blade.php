@@ -108,9 +108,6 @@
         </a>
     @endif
 </td>
-    
-
-
                     </td>
                   </tr>
                   @empty
