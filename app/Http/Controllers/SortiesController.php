@@ -190,7 +190,7 @@ class SortiesController extends Controller
         $diffFormatted = $diff > 0 ? "+{$diff}" : (string) $diff; // (Corrigé : si >0, c'est un +, sinon c'est géré par le signe -)
 
         // Capacité et occupation (Considération d'utiliser .env pour la capacité)
-        $capaciteTotale = env('PARKING_CAPACITY', 19); 
+        $capaciteTotale = env('PARKING_CAPACITY', 500); 
         $placesOccupées = max(0, $currentPresent); // Évite un chiffre négatif en cas d'erreur de base de données
         $tauxOccupation = $capaciteTotale > 0 ? round(($placesOccupées / $capaciteTotale) * 100, 1) : 0;
 
