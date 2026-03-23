@@ -72,20 +72,57 @@
             <span id="btn-text">Enregistrer l'entrée</span>
           </button>
         </form>
-          @if(session('ticket_url'))
-    <script>
-        window.open("{{ session('ticket_url') }}", '_blank');
-    </script>
-@endif
+      
       </div>
     </div>
   </main>
   </div>
   </div>
     <!-- On ajoute une iframe invisible à la fin de la page -->
-<iframe id="ticket-iframe" style="display:none;"></iframe>
+<!-- Iframe invisible unique pour l'impression silencieuse -->
+<iframe id="print_frame" name="print_frame" style="display:none;"></iframe>
 
-  <!-- Vérification AJAX -->
+<!-- Scripts -->
+<script>
+    // 1. GESTION DE L'IMPRESSION AUTOMATIQUE (Dés que la session ticket_url existe)
+    @if(session('ticket_url'))
+        window.onload = function() {
+            var frame = document.getElementById('print_frame');
+            frame.src = "{{ session('ticket_url') }}";
+            
+            frame.onload = function() {
+                // Focus et impression
+                frame.contentWindow.focus();
+                frame.contentWindow.print();
+            };
+        };
+    @endif
+
+    // 2. VÉRIFICATION AJAX DE LA PLAQUE
+    document.getElementById('plaque').addEventListener('blur', function () {
+        const plaque = this.value;
+        const type = document.getElementById('type').value;
+        const statusText = document.getElementById('plaque-status');
+        const btn = document.getElementById('submit-btn');
+
+        if (plaque && type) {
+            fetch(`/check-plaque?plaque=${plaque}&type=${type}`)
+                .then(res => res.json())
+                .then(data => {
+                    if (data.exists) {
+                        statusText.classList.remove('hidden');
+                        btn.disabled = true;
+                    } else {
+                        statusText.classList.add('hidden');
+                        btn.disabled = false;
+                    }
+                })
+                .catch(err => console.error('Erreur AJAX:', err));
+        }
+    });
+</script>
+
+  <!-- Vérification AJAX
   <script>
     document.getElementById('plaque').addEventListener('blur', function () {
       const plaque = this.value;
@@ -109,22 +146,8 @@
   
 
   </script>
+ -->
 
-
-@if(session('ticket_url'))
-<script>
-    // 1. On récupère l'iframe
-    var iframe = document.getElementById('ticket-iframe');
     
-    // 2. On lui donne l'adresse du ticket
-    iframe.src = "{{ session('ticket_url') }}";
-
-    // 3. Quand l'iframe a fini de charger le ticket, on l'imprime
-    iframe.onload = function() {
-        iframe.contentWindow.focus();
-        iframe.contentWindow.print();
-    };
-</script>
-@endif
   @endsection('content')
 
