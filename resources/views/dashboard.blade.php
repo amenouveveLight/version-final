@@ -212,12 +212,18 @@
                     <!-- ============================================== -->
                     <div id="tab-weekly" class="tab-content hidden w-full">
                         <div class="flex flex-row justify-between items-center mb-2 sm:mb-4 w-full gap-1">
-                            <h4 class="text-[10px] sm:text-md font-medium text-gray-700 hidden sm:block">Stats hebdo</h4>
+                            <h4 class="text-[10px] sm:text-md font-medium text-gray-700 hidden sm:block">Stats du jour</h4>
                             <form method="GET" action="{{ route('dashboard') }}" class="flex flex-row items-center justify-end w-full sm:w-auto gap-1 sm:gap-2">
-                                <input type="week" name="date" id="weekly-week" class="px-1 sm:px-3 py-1 border border-gray-300 rounded text-[9px] sm:text-sm text-gray-900 w-28 sm:w-auto" value="{{ request('date', now()->format('Y') . '-W' . now()->format('W')) }}">
-                                <input type="hidden" name="period" value="semaine">
-                                <button type="submit" class="bg-primary-100 text-primary-700 px-2 sm:px-3 py-1 rounded text-[9px] sm:text-sm font-medium hover:bg-primary-200 text-gray-600">Appliquer</button> 
-                                <a href="{{ route('export.semaine',['date' => request('date', date('Y-m-d'))]) }}" class="bg-green-600 text-white px-2 sm:px-3 py-1 rounded text-[9px] sm:text-sm font-medium hover:bg-green-700">PDF</a>
+                                <input type="date" name="date" value="{{ request('date', date('Y-m-d')) }}" 
+                                    class="px-1 sm:px-3 py-1 border border-green-300 rounded text-[9px] sm:text-sm text-gray-900 w-24 sm:w-auto hover:border-green-600">
+                                <input type="hidden" name="period" value="jour">
+                                <button type="submit" class="bg-primary-100 text-primary-700 px-2 sm:px-3 py-1 rounded text-[9px] sm:text-sm font-medium hover:bg-primary-200 text-gray-700">
+                                    Appliquer
+                                </button>
+                                <a href="{{ route('export.jour', ['date' => request('date', date('Y-m-d'))]) }}" 
+                                    class="bg-green-600 text-white px-2 sm:px-3 py-1 rounded text-[9px] sm:text-sm font-medium hover:bg-green-700">
+                                    PDF
+                                </a>
                             </form>
                         </div>
                         <div class="w-full overflow-hidden shadow ring-1 ring-black ring-opacity-5 rounded-lg border border-gray-200">
@@ -292,7 +298,7 @@
                                 <input type="month" name="date" id="monthly-month" class="px-1 sm:px-3 py-1 border border-gray-300 rounded text-[9px] sm:text-sm text-gray-900 w-24 sm:w-auto" value="{{ request('date', now()->format('Y-m')) }}">
                                 <input type="hidden" name="period" value="mois text-gray-600">
                                 <button type="submit" class="bg-primary-100 text-primary-700 px-2 sm:px-3 py-1 rounded text-[9px] sm:text-sm font-medium hover:bg-primary-200 text-gray-600">Appliquer</button>
-                                <a href="{{ route('export.mois', ['date' => request('date', date('Y-m-d'))]) }}" class="bg-green-600 text-white px-2 sm:px-3 py-1 rounded text-[9px] sm:text-sm font-medium hover:bg-green-700">PDF</a>
+                                <a href="{{ route('export.mois', ['date' => request('date', date('Y-m'))]) }}" class="bg-green-600 text-white px-2 sm:px-3 py-1 rounded text-[9px] sm:text-sm font-medium hover:bg-green-700">PDF</a>
                             </form>
                         </div>
                         <div class="w-full overflow-hidden shadow ring-1 ring-black ring-opacity-5 rounded-lg border border-gray-200">
@@ -437,5 +443,58 @@
         </div>
     </div>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Sélectionner tous les liens d'onglets
+        const tabLinks = document.querySelectorAll('ul.flex li a');
+        // Sélectionner toutes les sections de contenu
+        const tabContents = document.querySelectorAll('.tab-content');
+
+        tabLinks.forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+
+                // 1. Masquer tous les contenus d'onglets
+                tabContents.forEach(content => {
+                    content.classList.add('hidden');
+                });
+
+                // 2. Désactiver le style de tous les onglets (remettre en gris)
+                tabLinks.forEach(tab => {
+                    tab.classList.remove('border-green-600', 'text-green-600', 'font-semibold');
+                    tab.classList.add('border-transparent', 'text-gray-500');
+                });
+
+                // 3. Afficher le contenu de l'onglet cliqué
+                const targetId = this.getAttribute('href').substring(1);
+                const targetContent = document.getElementById(targetId);
+                if (targetContent) {
+                    targetContent.classList.remove('hidden');
+                }
+
+                // 4. Activer le style sur l'onglet cliqué (bordure verte)
+                this.classList.add('border-green-600', 'text-green-600', 'font-semibold');
+                this.classList.remove('border-transparent', 'text-gray-500');
+            });
+        });
+
+        // Optionnel : Gérer l'onglet actif au chargement si l'URL contient un paramètre 'period'
+        const urlParams = new URLSearchParams(window.location.search);
+        const period = urlParams.get('period');
+        
+        if (period) {
+            let targetTab = '';
+            if (period === 'jour') targetTab = 'a[href="#tab-daily"]';
+            else if (period === 'semaine') targetTab = 'a[href="#tab-weekly"]';
+            else if (period === 'mois') targetTab = 'a[href="#tab-monthly"]';
+            else if (period === 'année') targetTab = 'a[href="#tab-yearly"]';
+
+            if (targetTab) {
+                document.querySelector(targetTab).click();
+            }
+        }
+    });
+</script>
 
 @endsection
