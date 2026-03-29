@@ -2,120 +2,129 @@
 
 @section('content')
 
-<div class="pt-20 md:pt-28">
-    <!-- Ici ton contenu principal -->
-    <main class="mt-2 md:mt-5">
+<div class="pt-16 md:pt-28 w-full bg-gray-50 min-h-screen">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
         
-        <!-- max-w-2xl limite la largeur sur PC/Tablette. mx-auto le centre au milieu de l'écran. -->
-        <div class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- Carte principale (Style Dashboard) -->
+        <div class="bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden relative z-10">
             
-            <div class="bg-white shadow-lg rounded-xl p-5 sm:p-8 relative z-10">
-                <h2 class="text-xl sm:text-2xl font-semibold text-gray-800 mb-6 text-center sm:text-left">
-                    Enregistrement d'une entrée
-                </h2>
+            <!-- En-tête de la carte avec dégradé léger ou bordure -->
+            <div class="bg-white border-b border-gray-100 p-5 sm:p-6">
+                <div class="flex items-center justify-center sm:justify-start space-x-3">
+                    <div class="bg-green-100 p-2 rounded-lg">
+                        <svg class="h-6 w-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
+                        </svg>
+                    </div>
+                    <h2 class="text-xl sm:text-2xl font-bold text-gray-800">Nouvelle Entrée</h2>
+                </div>
+                <p class="text-xs sm:text-sm text-gray-500 mt-1 text-center sm:text-left sm:ml-11">
+                    Enregistrez un véhicule entrant dans le parking.
+                </p>
+            </div>
 
-                <!-- Messages -->
+            <div class="p-5 sm:p-8">
+                <!-- Alertes de session -->
                 @if ($errors->any())
-                    <div class="bg-red-100 text-red-700 p-3 sm:p-4 mb-5 rounded-lg text-sm sm:text-base">
-                        @foreach ($errors->all() as $error)
-                            <p>{{ $error }}</p>
-                        @endforeach
+                    <div class="mb-6 p-4 bg-red-50 border-l-4 border-red-500 text-red-700 rounded-r-lg shadow-sm">
+                        <div class="flex items-center mb-1">
+                            <svg class="h-5 w-5 mr-2" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/></svg>
+                            <span class="font-bold">Erreur</span>
+                        </div>
+                        <ul class="text-sm list-disc list-inside">
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
                     </div>
                 @endif
                 
                 @if (session('success'))
-                    <div class="bg-green-100 text-green-700 p-3 sm:p-4 mb-5 rounded-lg text-sm sm:text-base">
-                        {{ session('success') }}
+                    <div class="mb-6 p-4 bg-green-50 border-l-4 border-green-500 text-green-700 rounded-r-lg shadow-sm flex items-center">
+                        <svg class="h-5 w-5 mr-2" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+                        <span class="font-bold">{{ session('success') }}</span>
                     </div>
                 @endif
 
-                <!-- Formulaire avec espacement vertical (space-y-5) -->
-                <form id="entry-form" method="POST" action="{{ route('entres.store') }}" class="space-y-4 sm:space-y-5">
+                <form id="entry-form" method="POST" action="{{ route('entres.store') }}" class="space-y-6">
                     @csrf
                     
-                    <!-- Plaque -->
-                    <div>
-                        <label for="plaque" class="block text-sm font-medium text-gray-700 mb-1">Plaque d'immatriculation</label>
-                        <input type="text" id="plaque" name="plaque" value="{{ old('plaque') }}"
-                            class="w-full px-4 py-2.5 sm:py-3 border border-gray-300 rounded-lg bg-gray-50 focus:ring-2 focus:ring-primary-500 text-base text-gray-700"
-                            placeholder="Ex: TG-1234-AB" required>
-                        <p id="plaque-status" class="text-xs sm:text-sm mt-1 text-red-500 hidden">Ce véhicule est déjà présent dans le parking.</p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Plaque -->
+                        <div class="md:col-span-1">
+                            <label for="plaque" class="block text-xs sm:text-sm font-bold text-gray-700 uppercase tracking-wider mb-2">Plaque d'immatriculation</label>
+                            <div class="relative">
+                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <span class="text-gray-400 font-bold text-sm">#</span>
+                                </div>
+                                <input type="text" id="plaque" name="plaque" value="{{ old('plaque') }}"
+                                    class="w-full pl-8 pr-4 py-3 border border-gray-300 rounded-lg bg-gray-50 focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all text-gray-800 font-semibold uppercase placeholder-gray-400"
+                                    placeholder="TG-0000-AB" required>
+                            </div>
+                            <p id="plaque-status" class="text-xs mt-2 text-red-600 font-bold hidden flex items-center">
+                                <svg class="h-3 w-3 mr-1" fill="currentColor" viewBox="0 0 20 20"><path d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"/></svg>
+                                Déjà dans le parking !
+                            </p>
+                        </div>
+
+                        <!-- Type -->
+                        <div class="md:col-span-1">
+                            <label for="type" class="block text-xs sm:text-sm font-bold text-gray-700 uppercase tracking-wider mb-2">Type d'engin</label>
+                            <select id="type" name="type"
+                                class="w-full px-4 py-3 border border-gray-300 rounded-lg bg-gray-50 focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all text-gray-800 font-semibold cursor-pointer"
+                                required>
+                                <option value="" disabled selected>Choisir un type...</option>
+                                <option value="motorcycle">🏍️ Moto</option>
+                                <option value="car">Voiture</option>
+                                <option value="tricycle">Tricycle</option>
+                                <option value="nyonyovi">Nyonyovi</option>
+                                <option value="minibus">Minibus</option>
+                                <option value="bus"> Bus</option>
+                                <option value="truck">Camion</option>
+                            </select>
+                        </div>
+
+                        <!-- Nom Propriétaire -->
+                        <div class="md:col-span-1">
+                            <label for="name" class="block text-xs sm:text-sm font-bold text-gray-700 uppercase tracking-wider mb-2">Propriétaire (Optionnel)</label>
+                            <div class="relative">
+                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <svg class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                                    </svg>
+                                </div>
+                                <input type="text" id="name" name="name" value="{{ old('name') }}"
+                                    class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg bg-gray-50 focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all text-gray-800"
+                                    placeholder="Nom complet">
+                            </div>
+                        </div>
+
+                        <!-- Téléphone -->
+                        <div class="md:col-span-1">
+                            <label for="phone" class="block text-xs sm:text-sm font-bold text-gray-700 uppercase tracking-wider mb-2">Téléphone (Optionnel)</label>
+                            <div class="relative">
+                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <svg class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                                    </svg>
+                                </div>
+                                <input type="tel" id="phone" name="phone" value="{{ old('phone') }}"
+                                    class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg bg-gray-50 focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all text-gray-800"
+                                    placeholder="Ex: 90 00 00 00">
+                            </div>
+                        </div>
                     </div>
 
-                    <!-- Type -->
-                    <div>
-                        <label for="type" class="block text-sm font-medium text-gray-700 mb-1">Type de véhicule</label>
-                        <select id="type" name="type"
-                            class="w-full px-4 py-2.5 sm:py-3 border border-gray-300 rounded-lg bg-gray-50 focus:ring-2 focus:ring-primary-500 text-base text-gray-700"
-                            required>
-                            <option value="" disabled selected>Sélectionner un type</option>
-                            <option value="motorcycle">Moto</option>
-                            <option value="car">Voiture</option>
-                            <option value="tricycle">Tricycle</option>
-                            <option value="nyonyovi">Nyonyovi</option>
-                            <option value="minibus">Minibus</option>
-                            <option value="bus">Bus</option>
-                            <option value="truck">Camion</option>
-                        </select>
-                    </div>
-
-                    <!-- Nom -->
-                    <div>
-                        <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Nom du propriétaire</label>
-                        <input type="text" id="name" name="name" value="{{ old('name') }}"
-                            class="w-full px-4 py-2.5 sm:py-3 border border-gray-300 rounded-lg bg-gray-50 focus:ring-2 focus:ring-primary-500 text-base text-gray-700"
-                            placeholder="Nom complet">
-                    </div>
-
-                    <!-- Téléphone -->
-                    <div>
-                        <label for="phone" class="block text-sm font-medium text-gray-700 mb-1">Numéro de téléphone</label>
-                        <input type="tel" id="phone" name="phone" value="{{ old('phone') }}"
-                            class="w-full px-4 py-2.5 sm:py-3 border border-gray-300 rounded-lg bg-gray-50 focus:ring-2 focus:ring-primary-500 text-base text-gray-700"
-                            placeholder="Ex: 90123456">
-                    </div>
-
-                    <!-- Bouton -->
-                    <div class="pt-2">
+                    <!-- Bouton d'action -->
+                    <div class="pt-4">
                         <button type="submit" id="submit-btn"
-                            class="w-full bg-green-600 text-white font-semibold py-3 sm:py-3.5 rounded-lg hover:bg-green-700 transition disabled:opacity-50 text-sm sm:text-base">
-                            <span id="btn-text">Enregistrer l'entrée</span>
+                            class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-4 rounded-lg shadow-md transition-all transform hover:-translate-y-1 active:scale-95 flex items-center justify-center space-x-2">
+                            <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            <span>ENREGISTRER L'ENTRÉE</span>
                         </button>
                     </div>
                 </form>
 
                 @if(session('ticket_url'))
-                    <script>
-                        window.open("{{ session('ticket_url') }}", '_blank');
-                    </script>
-                @endif
-            </div>
-        </div>
-    </main>
-</div>
-
-<!-- Vérification AJAX -->
-<script>
-    document.getElementById('plaque').addEventListener('blur', function () {
-        const plaque = this.value;
-        const type = document.getElementById('type').value;
-        
-        if (plaque && type) {
-            fetch(`/check-plaque?plaque=${plaque}&type=${type}`)
-                .then(res => res.json())
-                .then(data => {
-                    const status = document.getElementById('plaque-status');
-                    const btn = document.getElementById('submit-btn');
-                    if (data.exists) {
-                        status.classList.remove('hidden');
-                        btn.disabled = true;
-                    } else {
-                        status.classList.add('hidden');
-                        btn.disabled = false;
-                    }
-                });
-        }
-    });
-</script>
-
-@endsection
