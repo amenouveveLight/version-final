@@ -10,7 +10,7 @@ use Illuminate\Pagination\LengthAwarePaginator;
 
 class ActivityController extends Controller
 {
-    public function show($id)
+    public function showEntre($id)
     {
         $entree = Entres::findOrFail($id);
         $hasSortie = Sorties::where('plaque', $entree->plaque)
@@ -19,7 +19,7 @@ class ActivityController extends Controller
         return view('entres.show', compact('entree', 'hasSortie'));
     }
 
-    public function Sortie($id)
+    public function showSortie($id)
     {
         $sortie = Sorties::findOrFail($id);
         return view('sorties.show', compact('sortie'));

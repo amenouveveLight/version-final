@@ -77,7 +77,7 @@ Route::get('/entres', [EntresController::class, 'create'])->name('entres.create'
 Route::post('/entres', [EntresController::class, 'store'])->name('entres.store');
 Route::get('/entres/{id}/ticket', [EntresController::class, 'ticket'])->name('entres.ticket');
 Route::get('/entree/ticket/download/{id}', [EntresController::class, 'downloadTicket'])->name('entree-ticket.download');
-Route::get('/entres/{id}', [ActivityController::class, 'show'])->name('entres.show');
+Route::get('/entres/{id}', [ActivityController::class, 'showEntre'])->name('entres.show');
 Route::get('/entres/{id}/edit', [EntresController::class, 'edit'])->name('entres.edit');
 Route::put('/entres/{id}', [EntresController::class, 'update'])->name('entres.update');
  Route::delete('/entres/{id}', [EntresController::class, 'destroy'])->name('entres.destroy');
@@ -89,7 +89,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/sorties', [SortiesController::class, 'store'])->name('sorties.store');
     Route::get('/ticket/sortie/{id}', [SortiesController::class, 'downloadTicket'])->name('ticket-sortie');
     Route::get('/ticket/html/{id}', [SortiesController::class, 'ticketHtml'])->name('sorti-ticket-html');
-    Route::get('/sorties/{id}',[ActivityController::class,'show'])->name('sorties.show');
+    Route::get('/sorties/{id}',[ActivityController::class,'showSortie'])->name('sorties.show');
     Route::get('/sorties/{id}/edit', [EntresController::class, 'edit'])->name('sorties.edit');
     Route::put('/sorties/{id}', [EntresController::class, 'update'])->name('sorties.update');
     Route::delete('/sorties/{id}', [EntresController::class, 'destroy'])->name('sorties.destroy');
