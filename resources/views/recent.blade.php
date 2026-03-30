@@ -2,7 +2,7 @@
 
 @section('content')
 
-<div class="pt-16 md:pt-28 w-full bg-gray-50 min-h-screen">
+<div class="pt-28 md:pt-28 w-full bg-gray-50 min-h-screen">
     <div class="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8 py-8">
         
         <!-- En-tête de page -->

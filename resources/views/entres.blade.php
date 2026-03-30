@@ -2,7 +2,7 @@
 
 @section('content')
 
-<div class="pt-16 md:pt-28 w-full bg-gray-50 min-h-screen">
+<div class="pt-28 md:pt-28 w-full bg-gray-50 min-h-screen">
     <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
         
         <!-- Carte Principale (Style Dashboard) -->
