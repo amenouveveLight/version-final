@@ -74,13 +74,13 @@
                                 class="w-full px-4 py-3 border border-gray-300 rounded-lg bg-gray-50 focus:ring-2 focus:ring-green-500 font-bold text-gray-800 cursor-pointer"
                                 required>
                                 <option value="" disabled selected>Choisir...</option>
-                                <option value="motorcycle">🏍️ Moto</option>
-                                <option value="car">🚗 Voiture</option>
-                                <option value="tricycle">🛺 Tricycle</option>
-                                <option value="nyonyovi">🚛 Nyonyovis</option>
-                                <option value="minibus">🚐 Minibus</option>
-                                <option value="bus">🚌 Bus</option>
-                                <option value="truck">🚚 Camion</option>
+                                <option value="motorcycle"> Moto</option>
+                                <option value="car"> Voiture</option>
+                                <option value="tricycle"> Tricycle</option>
+                                <option value="nyonyovi"> Nyonyovis</option>
+                                <option value="minibus"> Minibus</option>
+                                <option value="bus"> Bus</option>
+                                <option value="truck"> Camion</option>
                             </select>
                         </div>
 
@@ -122,7 +122,7 @@
                             <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                             </svg>
-                            <span id="btn-text uppercase">Enregistrer l'entrée</span>
+                            <span class="uppercase">Enregistrer l'entrée</span>
                         </button>
                     </div>
                 </form>
@@ -146,8 +146,10 @@
             frame.src = "{{ session('ticket_url') }}";
             
             frame.onload = function() {
-                frame.contentWindow.focus();
-                frame.contentWindow.print();
+                if(frame.contentWindow) {
+                    frame.contentWindow.focus();
+                    frame.contentWindow.print();
+                }
             };
         };
     @endif
