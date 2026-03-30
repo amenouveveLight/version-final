@@ -49,7 +49,7 @@ class ActivityController extends Controller
                     'entre'     => $entre->created_at->format('H:i'),
                     'sortie'    => '-',
                     'duree'     => '-',
-                    'statut'    => 'Enregistrée',
+                    'statut'    => 'En cours',
                     'raw_date'  => $entre->created_at, // Pour le tri
                 ]);
             }
@@ -68,7 +68,7 @@ class ActivityController extends Controller
                     'entre'     => '-',
                     'sortie'    => $sortie->created_at->format('H:i'),
                     'duree'     => '-',
-                    'statut'    => 'Effectuée',
+                    'statut'    => 'Terminé',
                     'raw_date'  => $sortie->created_at,
                 ]);
             }
