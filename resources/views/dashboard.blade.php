@@ -232,21 +232,35 @@
                     </div>
 
                     <!-- Graphique à barres -->
-                    <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
-                        <h5 class="text-xs font-black text-gray-400 uppercase mb-6 text-center tracking-widest">Analyse des revenus</h5>
-                        <div class="relative h-64 flex items-end justify-around px-4 border-b border-gray-100">
-                            @foreach ($barData as $bar)
-                                @php $h = $maxRev > 0 ? round(($bar['revenu'] / $maxRev) * 100) : 0; @endphp
-                                <div class="flex flex-col items-center w-full group">
-                                    <div class="w-8 bg-green-500 rounded-t-lg transition-all duration-300 hover:bg-green-600 relative" style="height: {{ max($h, 2) }}%;">
-                                        <div class="absolute -top-10 left-1/2 -translate-x-1/2 bg-gray-800 text-white text-[9px] px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-10">
-                                            {{ number_format($bar['revenu'], 0, '', ' ') }}
-                                        </div>
-                                    </div>
-                                    <span class="text-[9px] font-bold text-gray-400 mt-2 rotate-45 origin-left">{{ $bar['label'] }}</span>
-                                </div>
-                            @endforeach
-                        </div>
+                    <!-- Graphique à barres -->
+<div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
+    <h5 class="text-xs font-black text-gray-400 uppercase mb-6 text-center tracking-widest">Analyse des revenus</h5>
+    <div class="relative h-64 flex items-end justify-around px-4 border-b border-gray-100">
+        @foreach ($barData as $bar)
+            @php 
+                $h = $maxRev > 0 ? round(($bar['revenu'] / $maxRev) * 100) : 0; 
+                // On utilise la couleur venant du tableau ou une couleur par défaut si elle n'existe pas
+                $barColor = $bar['color'] ?? '#10b981'; 
+            @endphp
+            <div class="flex flex-col items-center w-full group">
+                <!-- La couleur est appliquée ici via style="background-color: ..." -->
+                <div class="w-8 rounded-t-lg transition-all duration-300 relative group-hover:brightness-90" 
+                     style="height: {{ max($h, 5) }}%; background-color: {{ $barColor }};">
+                    
+                    <!-- Tooltip au survol (Affiche le montant exact) -->
+                    <div class="absolute -top-10 left-1/2 -translate-x-1/2 bg-gray-800 text-white text-[10px] px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-10 font-bold shadow-xl">
+                        {{ number_format($bar['revenu'], 0, '', ' ') }} FCFA
+                    </div>
+                </div>
+                
+                <!-- Label de l'engin (ex: Moto, Camion...) -->
+                <span class="text-[9px] font-black text-gray-500 mt-4 rotate-45 origin-left uppercase tracking-tighter">
+                    {{ $bar['label'] }}
+                </span>
+            </div>
+        @endforeach
+    </div>
+</div>
                     </div>
                 </div>
 
