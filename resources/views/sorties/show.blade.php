@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="pt-28 md:pt-28 w-full bg-gray-50 min-h-screen">
+<div class="pt-28 md:pt-2 w-full bg-gray-50 min-h-screen">
     <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 pb-12">
         
         <!-- Bouton Retour -->
@@ -101,18 +101,6 @@
 
                 <!-- Actions -->
                 <div class="mt-12 pt-8 border-t border-gray-100 flex flex-col sm:flex-row gap-4">
-                    
-                    <!-- Bouton Modifier -->
-                    {{-- Assurez-vous que la route 'sorties.edit' existe --}}
-                    @can('update', $sortie) {{-- Ou une autre permission pertinente, par exemple 'update-sortie' --}}
-                        <a href="{{ route('sorties.edit', $sortie->id) }}" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-lg shadow-md transition-all transform hover:-translate-y-1 active:scale-95 flex items-center justify-center space-x-2">
-                            <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-2.036a1 1 0 111.414 1.414L17 7.414M15 11h6v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2h6M7 15l3 3L22 7" />
-                            </svg>
-                            <span class="text-xs uppercase tracking-widest">Modifier</span>
-                        </a>
-                    @endcan
-
                     <!-- Bouton Imprimer Reçu (Action principale) -->
                     <button onclick="window.print()" class="flex-1 bg-gray-800 hover:bg-black text-white font-bold py-4 rounded-lg shadow-md transition-all transform hover:-translate-y-1 active:scale-95 flex items-center justify-center space-x-2">
                         <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -121,21 +109,17 @@
                         <span class="text-xs uppercase tracking-widest">Imprimer le reçu</span>
                     </button>
 
-                    <!-- Bouton Supprimer (Si admin ou gérant seulement) -->
-                    {{-- Vérifie si l'utilisateur a la permission de supprimer --}}
-                    {{-- Vous pourriez avoir une permission globale comme 'delete-sortie' ou vérifier le rôle --}}
-                    @can('delete', $sortie) {{-- Ou @role('admin|gerant') si vous utilisez spatie/laravel-permission --}}
-                        <form action="{{ route('sorties.destroy', $sortie->id) }}" method="POST" class="flex-1" onsubmit="return confirm('Voulez-vous vraiment annuler cette sortie ?');">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="w-full bg-white border border-red-200 text-red-600 font-bold py-4 rounded-lg hover:bg-red-50 transition-all text-xs uppercase tracking-widest flex items-center justify-center space-x-2">
-                                <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                                </svg>
-                                <span>Annuler la transaction</span>
-                            </button>
-                        </form>
-                    @endcan
+                    <!-- Bouton Supprimer (Si admin seulement ou selon tes besoins) -->
+                    <form action="{{ route('sorties.destroy', $sortie->id) }}" method="POST" class="flex-1" onsubmit="return confirm('Voulez-vous vraiment annuler cette sortie ?');">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="w-full bg-white border border-red-200 text-red-600 font-bold py-4 rounded-lg hover:bg-red-50 transition-all text-xs uppercase tracking-widest flex items-center justify-center space-x-2">
+                            <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                            </svg>
+                            <span>Annuler la transaction</span>
+                        </button>
+                    </form>
                 </div>
             </div>
         </div>
