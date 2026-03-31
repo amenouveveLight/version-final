@@ -367,7 +367,7 @@ class SortiesController extends Controller
             'paiement_ok' => $request->has('paiement_ok'),
         ]);
                 // ... après avoir créé la variable $sortie
-             return redirect()->route('sorties')->with([
+             return redirect()->route('sorties.create')->with([
             'success' => 'Sortie effectuée avec succès !',
             'ticket_url' => route('sorties.ticket.html', $sortie->id)  // Assurez-vous que cette route existe
         ]);

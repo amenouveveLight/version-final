@@ -28,7 +28,7 @@ class EntresController extends Controller
             'phone'  => 'nullable|string|max:20',
         ]);
 
-         // 2. Rechercher la dernière entrée pour cette plaque ET type
+        // 2. Rechercher la dernière entrée pour cette plaque ET type
         $lastEntry = Entres::where('plaque', $validated['plaque'])
                             ->where('type', $validated['type'])
                             ->latest()
@@ -56,39 +56,30 @@ class EntresController extends Controller
                 $validated['phone'] = $lastEntry->phone;
             }
 
-            if (empty($validated['phone'])) {
-                $validated['phone'] = $lastEntry->phone;
-            } 
-         
-              if (empty($validated['name'])) {
-             return back()->withErrors(['name' => 'Veuillez compléter le nom.'])->withInput();
+            // Vérification finale si, même après récupération, c'est vide
+            if (empty($validated['name'])) {
+                return back()->withErrors(['name' => 'Veuillez compléter le nom.'])->withInput();
             }
 
             if (empty($validated['phone'])) {
-            return back()->withErrors(['phone' => 'Veuillez compléter le numéro de téléphone.'])->withInput();
+                return back()->withErrors(['phone' => 'Veuillez compléter le numéro de téléphone.'])->withInput();
             }
-
-
         }
 
         // 4. Enregistrer l’entrée
         $entree = Entres::create([
-            'plaque' => $validated['plaque'],
-            'type'   => $validated['type'],
-            'name'   => $validated['name'],
-            'phone'  => $validated['phone'],
+            'plaque'  => $validated['plaque'],
+            'type'    => $validated['type'],
+            'name'    => $validated['name'],
+            'phone'   => $validated['phone'],
             'user_id' => auth()->id(),
         ]);
 
-     return redirect()->route('entres.create')->with([
-           'success' => 'Entrée enregistrée !',
-           'ticket_url' => route('entres.ticket.html', $entree->id) // Assurez-vous que cette route existe
+        return redirect()->route('entres.create')->with([
+            'success' => 'Entrée enregistrée !',
+            'ticket_url' => route('entres.ticket.html', $entree->id) // Assurez-vous que cette route existe
         ]);
-     
-}
-
-
-
+    }
 
     // 🔹 Affichage détail entrée
     public function show($id)
@@ -99,21 +90,20 @@ class EntresController extends Controller
 
     // 🔹 Formulaire édition
     public function edit($id)
-{
-    $entree = Entres::findOrFail($id);
+    {
+        $entree = Entres::findOrFail($id);
 
-    $hasSortie = Sorties::where('plaque', $entree->plaque)
-                        ->where('created_at', '>', $entree->created_at)
-                        ->exists();
+        $hasSortie = Sorties::where('plaque', $entree->plaque)
+                            ->where('created_at', '>', $entree->created_at)
+                            ->exists();
 
-    if ($hasSortie) {
-        return redirect()->route('recent')
-            ->with('error', "Cette entrée ne peut pas être modifiée car elle a déjà une sortie.");
+        if ($hasSortie) {
+            return redirect()->route('recent')
+                ->with('error', "Cette entrée ne peut pas être modifiée car elle a déjà une sortie.");
+        }
+
+        return view('entres.edit', compact('entree'));
     }
-
-    return view('entres.edit', compact('entree'));
-}
-
 
     // 🔹 Mise à jour entrée
     public function update(Request $request, $id)
@@ -129,48 +119,42 @@ class EntresController extends Controller
 
         $entree->update($validated);
 
-         return redirectback()->with([
-           'success' => 'Entrée enregistrée !',
-           'ticket_url' => route('entres.ticket.html', $entree->id) // Assurez-vous que cette route existe
+        // ✅ Correction ici : c'est back(), pas redirectback()
+        return back()->with([
+            'success' => 'Entrée modifiée avec succès !',
+            'ticket_url' => route('entres.ticket.html', $entree->id)
         ]);
-     ;
     }
 
     // 🔹 Suppression entrée
-   public function destroy($id)
-{
-    $entree = Entres::findOrFail($id);
+    public function destroy($id)
+    {
+        $entree = Entres::findOrFail($id);
 
-    // Vérifier si une sortie existe pour cette entrée
-    $hasSortie = Sorties::where('plaque', $entree->plaque)
-                        ->where('created_at', '>', $entree->created_at)
-                        ->exists();
+        // Vérifier si une sortie existe pour cette entrée
+        $hasSortie = Sorties::where('plaque', $entree->plaque)
+                            ->where('created_at', '>', $entree->created_at)
+                            ->exists();
 
-    if ($hasSortie) {
+        if ($hasSortie) {
+            return redirect()->route('recent')
+                ->with('error', "Cette entrée ne peut pas être supprimée car elle a déjà une sortie.");
+        }
+
+        $entree->delete();
+
         return redirect()->route('recent')
-            ->with('error', "Cette entrée ne peut pas être supprimée car elle a déjà une sortie.");
+            ->with('success', "Entrée supprimée avec succès.");
     }
 
-    $entree->delete();
+    // 🔹 Affichage du ticket
+    public function ticketHtml($id)
+    {
+        // On récupère l'entrée par son ID
+        $entree = Entres::findOrFail($id);
 
-    return redirect()->route('recent')
-        ->with('success', "Entrée supprimée avec succès.");
-}
-
-use App\Models\Entres;
-
-// ...
-
-public function ticketHtml($id)
-{
-    // On récupère l'entrée par son ID
-    $entree = Entres::findOrFail($id);
-
-    // On retourne la vue du ticket (le nom du fichier est ticket-entree.blade.php)
-    return view('ticket-entree', compact('entree'));
-}
-
+        // On retourne la vue du ticket (le nom du fichier est ticket-entree.blade.php)
+        return view('ticket-entree', compact('entree'));
+    }
 
 }
-
- 
