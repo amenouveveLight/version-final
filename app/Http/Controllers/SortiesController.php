@@ -366,10 +366,10 @@ class SortiesController extends Controller
             'paiement'    => $validated['paiement'],
             'paiement_ok' => $request->has('paiement_ok'),
         ]);
-                // ... après avoir créé la variable $sortie
-             return redirect()->route('sorties.create')->with([
-            'success' => 'Sortie effectuée avec succès !',
-            'ticket_url' => route('sorties.ticket.html', $sortie->id)  // Assurez-vous que cette route existe
+                return redirect()->route('sorties.create')->with([
+        'success' => 'Sortie enregistrée avec succès !',
+        'ticket_url' => route('sorties.ticket.html', $sortie->id)
+    ]);// Assurez-vous que cette route existe
         ]);
     }
 
@@ -521,7 +521,7 @@ public function ticketHtml($id)
         ->first();
 
 
-    return view('ticket-sortie-html', compact('sortie', 'entree'));
+    return view('ticket-sortie', compact('sortie', 'entree'));
 }
     
 

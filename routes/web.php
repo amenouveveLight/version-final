@@ -88,7 +88,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/sorties', [SortiesController::class, 'create'])->name('sorties.create');
     Route::post('/sorties', [SortiesController::class, 'store'])->name('sorties.store');
     Route::get('/ticket/sortie/{id}', [SortiesController::class, 'downloadTicket'])->name('ticket-sortie');
-    Route::get('/ticket/html/{id}', [SortiesController::class, 'ticketHtml'])->name('sorti-ticket-html');
+    Route::get('sorties/ticket-html/{id}', [SortiesController::class, 'ticketHtml'])->name('sorties.ticket.html');
     Route::get('/sorties/{id}',[ActivityController::class,'showSortie'])->name('sorties.show');
     Route::get('/sorties/{id}/edit', [EntresController::class, 'edit'])->name('sorties.edit');
     Route::put('/sorties/{id}', [EntresController::class, 'update'])->name('sorties.update');
