@@ -370,7 +370,7 @@ class SortiesController extends Controller
         'success' => 'Sortie enregistrée avec succès !',
         'ticket_url' => route('sorties.ticket.html', $sortie->id)
     ]);// Assurez-vous que cette route existe
-        ]);
+        
     }
 
     // 🔹 Affichage détail sortie
