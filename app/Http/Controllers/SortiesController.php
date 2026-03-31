@@ -523,7 +523,7 @@ public function ticketHtml($id)
 
     return view('ticket-sortie-html', compact('sortie', 'entree'));
 }
-    }
+    
 
     public function statsAgents(Request $request)
     {
