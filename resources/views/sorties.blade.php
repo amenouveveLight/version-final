@@ -161,4 +161,25 @@
     </div>
 </div>
 
+
+<!-- IFRAME INVISIBLE POUR L'IMPRESSION -->
+<iframe id="print_frame" name="print_frame" style="position:absolute; top:-9999px; left:-9999px; border:none;"></iframe>
+
+<script>
+    // GESTION DE L'IMPRESSION AUTOMATIQUE
+    @if(session('ticket_url'))
+        window.onload = function() {
+            const frame = document.getElementById('print_frame');
+            frame.src = "{{ session('ticket_url') }}";
+            
+            frame.onload = function() {
+                setTimeout(function() {
+                    frame.contentWindow.focus();
+                    frame.contentWindow.print();
+                }, 500);
+            };
+        };
+    @endif
+</script>
+
 @endsection

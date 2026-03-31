@@ -1,11 +1,11 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="pt-28 md:pt-2 w-full bg-gray-50 min-h-screen">
+<div class="pt-24 md:pt-32 w-full bg-gray-50 min-h-screen">
     <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 pb-12">
         
         <!-- Bouton Retour -->
-        <div class="mb-6">
+        <div class="mb-6 print:hidden">
             <a href="{{ route('recent') }}" class="inline-flex items-center text-xs font-bold text-gray-500 hover:text-red-600 transition uppercase tracking-widest">
                 <svg class="w-4 h-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
@@ -80,9 +80,9 @@
                                 <div class="flex justify-between text-xs">
                                     <span class="text-gray-500">Mode de paiement :</span>
                                     <span class="font-bold text-gray-800 uppercase italic">
-                                        @if($sortie->paiement == 'cash')  Espèces 
-                                        @elseif($sortie->paiement == 'card')  Carte
-                                        @else  Application @endif
+                                        @if($sortie->paiement == 'cash') Espèces 
+                                        @elseif($sortie->paiement == 'card') Carte
+                                        @else Application @endif
                                     </span>
                                 </div>
                             </div>
@@ -99,33 +99,44 @@
                     </div>
                 </div>
 
-                <!-- Actions -->
-                <div class="mt-12 pt-8 border-t border-gray-100 flex flex-col sm:flex-row gap-4">
-                    <!-- Bouton Imprimer Reçu (Action principale) -->
+                <!-- Liens d'édition et suppression (Avant Impression) -->
+                <div class="mt-10 mb-4 flex items-center justify-start space-x-6 border-t border-gray-50 pt-6 print:hidden">
+                    <a href="{{ route('sorties.edit', $sortie->id) }}" class="text-blue-600 hover:text-blue-800 flex items-center text-xs font-bold uppercase tracking-widest transition-colors">
+                        <svg class="w-4 h-4 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                        </svg>
+                        Modifier les infos
+                    </a>
+
+                    @if(auth()->user()->role === 'admin' || auth()->user()->role === 'gerant')
+                        <form action="{{ route('sorties.destroy', $sortie->id) }}" method="POST" onsubmit="return confirm('Voulez-vous vraiment supprimer définitivement cette sortie ?');" class="inline">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="text-red-500 hover:text-red-700 flex items-center text-xs font-bold uppercase tracking-widest transition-colors">
+                                <svg class="w-4 h-4 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                </svg>
+                                Supprimer
+                            </button>
+                        </form>
+                    @endif
+                </div>
+
+                <!-- Actions Principales (Boutons) -->
+                <div class="mt-4 flex flex-col sm:flex-row gap-4 print:hidden">
+                    <!-- Bouton Imprimer Reçu -->
                     <button onclick="window.print()" class="flex-1 bg-gray-800 hover:bg-black text-white font-bold py-4 rounded-lg shadow-md transition-all transform hover:-translate-y-1 active:scale-95 flex items-center justify-center space-x-2">
                         <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
                         </svg>
                         <span class="text-xs uppercase tracking-widest">Imprimer le reçu</span>
                     </button>
-
-                    <!-- Bouton Supprimer (Si admin seulement ou selon tes besoins) -->
-                    <form action="{{ route('sorties.destroy', $sortie->id) }}" method="POST" class="flex-1" onsubmit="return confirm('Voulez-vous vraiment annuler cette sortie ?');">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" class="w-full bg-white border border-red-200 text-red-600 font-bold py-4 rounded-lg hover:bg-red-50 transition-all text-xs uppercase tracking-widest flex items-center justify-center space-x-2">
-                            <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                            </svg>
-                            <span>Annuler la transaction</span>
-                        </button>
-                    </form>
                 </div>
             </div>
         </div>
 
         <!-- Note footer -->
-        <div class="mt-8 text-center">
+        <div class="mt-8 text-center print:hidden">
             <p class="text-[10px] text-gray-400 font-bold uppercase tracking-[0.2em]">Transaction sécurisée par Parking Pro</p>
         </div>
     </div>
@@ -133,8 +144,8 @@
 
 <style>
     @media print {
-        .pt-24, .mb-6, .mt-12, .text-center { display: none !important; }
-        .shadow-lg { shadow: none !important; border: none !important; }
+        .pt-24, .mb-6, .mt-10, .mt-4, .text-center, .print\:hidden { display: none !important; }
+        .shadow-lg { box-shadow: none !important; border: 1px solid #eee !important; }
         .bg-gray-50 { background: white !important; }
         .max-w-3xl { max-width: 100% !important; margin: 0 !important; }
     }

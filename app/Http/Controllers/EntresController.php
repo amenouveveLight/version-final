@@ -80,14 +80,10 @@ class EntresController extends Controller
             'user_id' => auth()->id(),
         ]);
 
-     //  $pdf = Pdf::loadView('ticket-entree', compact('entree'))
-              //     ->setPaper([0, 0, 270, 400], 'portrait'); // format mini-ticket
-
-     // return $pdf->stream('ticket-entree.pdf');
-     // return view('entres') ->with('success', "Entrée enrégistrée avec succès.");
-      return redirect()->back()
-        ->with('success', "Entrée enregistrée avec succès.")
-        ->with('ticket_url', route('entres.ticket', $entree->id)); // On prépare l'URL du ticket
+     return redirect()->route('entres.create')->with([
+           'success' => 'Entrée enregistrée !',
+           'ticket_url' => route('entres.ticket.html', $entree->id) // Assurez-vous que cette route existe
+        ]);
      
 }
 

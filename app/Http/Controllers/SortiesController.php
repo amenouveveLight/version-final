@@ -366,9 +366,11 @@ class SortiesController extends Controller
             'paiement'    => $validated['paiement'],
             'paiement_ok' => $request->has('paiement_ok'),
         ]);
-
-        // 🚨 CORRECTION DU BUG ICI (Redirection) 🚨
-        return redirect()->back()->with('success', "Sortie enregistrée avec succès.");
+                // ... après avoir créé la variable $sortie
+             return redirect()->route('sorties')->with([
+            'success' => 'Sortie effectuée avec succès !',
+            'ticket_url' => route('sorties.ticket.html', $sortie->id)  // Assurez-vous que cette route existe
+        ]);
     }
 
     // 🔹 Affichage détail sortie
