@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="pt-24 md:pt-32 w-full bg-gray-50 min-h-screen">
+<div class="pt-28 md:pt-28 w-full bg-gray-50 min-h-screen">
     <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 pb-12">
         
         <!-- Bouton Retour -->
@@ -80,9 +80,9 @@
                                 <div class="flex justify-between text-xs">
                                     <span class="text-gray-500">Mode de paiement :</span>
                                     <span class="font-bold text-gray-800 uppercase italic">
-                                        @if($sortie->paiement == 'cash') 💵 Espèces 
-                                        @elseif($sortie->paiement == 'card') 💳 Carte
-                                        @else 📱 Application @endif
+                                        @if($sortie->paiement == 'cash')  Espèces 
+                                        @elseif($sortie->paiement == 'card')  Carte
+                                        @else  Application @endif
                                     </span>
                                 </div>
                             </div>
