@@ -508,9 +508,7 @@ class SortiesController extends Controller
         return $pdf->stream('ticket.pdf');
     }
 
-    public function ticketHtml($id)
-    {
-        $sortie = Sorties::findOrFail($id);
+  
         
 public function ticketHtml($id)
 {
