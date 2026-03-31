@@ -76,7 +76,7 @@ Route::middleware('auth')->group(function () {
 Route::get('/entres', [EntresController::class, 'create'])->name('entres.create');
 Route::post('/entres', [EntresController::class, 'store'])->name('entres.store');
 Route::get('/entres/{id}/ticket', [EntresController::class, 'ticket'])->name('entres.ticket');
-Route::get('/entree/ticket/download/{id}', [EntresController::class, 'downloadTicket'])->name('entree-ticket.download');
+Route::get('/entres/ticket-html/{id}', [EntresController::class, 'ticketHtml'])->name('entres.ticket.html');
 Route::get('/entres/{id}', [ActivityController::class, 'showEntre'])->name('entres.show');
 Route::get('/entres/{id}/edit', [EntresController::class, 'edit'])->name('entres.edit');
 Route::put('/entres/{id}', [EntresController::class, 'update'])->name('entres.update');

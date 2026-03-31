@@ -129,7 +129,11 @@ class EntresController extends Controller
 
         $entree->update($validated);
 
-        return back()->with('success', 'Entrée mise à jour.');
+         return redirectback()->with([
+           'success' => 'Entrée enregistrée !',
+           'ticket_url' => route('entres.ticket.html', $entree->id) // Assurez-vous que cette route existe
+        ]);
+     ;
     }
 
     // 🔹 Suppression entrée
@@ -153,14 +157,17 @@ class EntresController extends Controller
         ->with('success', "Entrée supprimée avec succès.");
 }
 
-public function ticket($id)
+use App\Models\Entres;
+
+// ...
+
+public function ticketHtml($id)
 {
+    // On récupère l'entrée par son ID
     $entree = Entres::findOrFail($id);
 
-    $pdf = Pdf::loadView('ticket-entree', compact('entree'))
-        ->setPaper([0, 0, 270, 400], 'portrait');
-
-    return $pdf->stream('ticket-entree.pdf');
+    // On retourne la vue du ticket (le nom du fichier est ticket-entree.blade.php)
+    return view('ticket-entree', compact('entree'));
 }
 
 

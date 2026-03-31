@@ -64,7 +64,15 @@
                     @error('plaque')
                         <p class="text-xs text-red-600 mt-2 font-bold">{{ $message }}</p>
                     @enderror
+
+
                 </form>
+                    
+@if(session('success'))
+    <div class="p-4 mb-4 bg-green-100 text-green-700 rounded-lg">
+        {{ session('success') }} (Impression en cours...)
+    </div>
+@endif
 
                 <hr class="mb-8 border-gray-100">
 

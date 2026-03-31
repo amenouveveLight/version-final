@@ -511,7 +511,20 @@ class SortiesController extends Controller
     public function ticketHtml($id)
     {
         $sortie = Sorties::findOrFail($id);
-        return view('ticket-html', compact('sortie'));
+        
+public function ticketHtml($id)
+{
+    $sortie = Sorties::findOrFail($id);
+    
+    // On récupère l'entrée correspondante pour avoir la date d'arrivée
+    $entree = Entres::where('plaque', $sortie->plaque)
+        ->where('created_at', '<=', $sortie->created_at)
+        ->latest()
+        ->first();
+
+
+    return view('ticket-sortie-html', compact('sortie', 'entree'));
+}
     }
 
     public function statsAgents(Request $request)
