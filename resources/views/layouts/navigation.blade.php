@@ -105,8 +105,8 @@
                     </svg>
                 </label>
 
-                <!-- Fullscreen Overlay Mobile Menu -->
-                <div id="mobile-menu" class="fixed inset-0 bg-white z-[55] flex flex-col items-center justify-center space-y-8 opacity-0 invisible scale-95 transition-all duration-300 ease-in-out pb-20 overflow-y-auto">
+                <!-- Fullscreen Overlay Mobile Menu (CORRIGÉ ICI : justify-start, pt-28, space-y-5) -->
+                <div id="mobile-menu" class="fixed inset-0 bg-white z-[55] flex flex-col items-center justify-start pt-28 space-y-5 opacity-0 invisible scale-95 transition-all duration-300 ease-in-out pb-20 overflow-y-auto">
                     
                     @auth
                         <!-- Rôle Agent -->
@@ -136,7 +136,7 @@
                         @endif
 
                         <!-- Options de profil mobile -->
-                        <div class="pt-8 mt-4 border-t border-gray-100 w-full max-w-xs flex flex-col items-center gap-4">
+                        <div class="pt-6 mt-2 border-t border-gray-100 w-full max-w-xs flex flex-col items-center gap-4">
                             <div class="bg-green-50 text-green-700 px-6 py-2 rounded-full font-bold text-sm uppercase tracking-widest border border-green-100 mb-2">
                                 {{ Auth::user()->firstname }}
                             </div>
@@ -149,7 +149,7 @@
                     @endauth
 
                     @guest
-                        <div class="flex flex-col w-full max-w-xs gap-4 px-6">
+                        <div class="flex flex-col w-full max-w-xs gap-4 px-6 pt-4">
                             <a href="{{ route('login') }}" class="w-full text-center bg-gray-100 hover:bg-gray-200 text-gray-800 font-bold py-4 rounded-lg uppercase tracking-widest text-sm transition-colors">
                                 Connexion
                             </a>
