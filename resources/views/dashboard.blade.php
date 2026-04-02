@@ -231,38 +231,50 @@
                         </div>
                     </div>
 
-                    <!-- Graphique à barres -->
-                    <!-- Graphique à barres -->
-                   <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
-                     <h5 class="text-xs font-black text-gray-400 uppercase mb-6 text-center tracking-widest">Analyse des revenus</h5>
-                       <div class="relative h-64 flex items-end justify-around px-4 border-b border-gray-100">
-                         @foreach ($barData as $bar)
-                          @php 
-                          $h = $maxRev > 0 ? round(($bar['revenu'] / $maxRev) * 100) : 0; 
-                          // On utilise la couleur venant du tableau ou une couleur par défaut si elle n'existe pas
-                          $barColor = $bar['color'] ?? '#10b981'; 
-                          @endphp
-                           <div class="flex flex-col items-center w-full group">
-                            <!-- La couleur est appliquée ici via style="background-color: ..." -->
-                              <div class="w-8 rounded-t-lg transition-all duration-300 relative group-hover:brightness-90" 
-                                   style="height: {{ max($h, 5) }}%; background-color: {{ $barColor }};">
+                   <!-- Graphique à barres : Analyse des revenus -->
+<div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+    <!-- Titre du graphique -->
+    <h5 class="text-xs font-black text-gray-400 uppercase mb-10 text-center tracking-widest">
+        Analyse des revenus
+    </h5>
+
+    <!-- Zone du graphique -->
+    <div class="relative h-64 flex items-end justify-around px-2 border-b border-gray-100">
+        @foreach ($barData as $bar)
+            @php 
+                $h = $maxRev > 0 ? round(($bar['revenu'] / $maxRev) * 100) : 0; 
+                $barColor = $bar['color'] ?? '#10b981'; 
+            @endphp
+            
+            <div class="flex flex-col items-center w-full group relative">
+                <!-- La Barre -->
+                <!-- max-w-[32px] empêche les barres d'être trop larges sur grand écran -->
+                <div class="w-full max-w-[32px] sm:max-w-[45px] rounded-t-lg transition-all duration-500 relative group-hover:brightness-95 cursor-pointer shadow-sm" 
+                     style="height: {{ max($h, 4) }}%; background-color: {{ $barColor }};">
                     
-                              <!-- Tooltip au survol (Affiche le montant exact) -->
-                                 <div class="absolute -top-10 left-1/2 -translate-x-1/2 bg-gray-800 text-white text-[10px] px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-10 font-bold shadow-xl">
-                        {{ number_format($bar['revenu'], 0, '', ' ') }} FCFA
+                    <!-- Tooltip (Bulle d'info au survol) -->
+                    <div class="absolute -top-12 left-1/2 -translate-x-1/2 bg-gray-900 text-white text-[10px] px-2.5 py-1.5 rounded-md opacity-0 group-hover:opacity-100 transition-all duration-300 whitespace-nowrap z-30 font-black shadow-xl scale-95 group-hover:scale-100 pointer-events-none">
+                        {{ number_format($bar['revenu'], 0, '', ' ') }} 
+                        <span class="text-[8px] text-gray-400">FCFA</span>
+                        <!-- Petite flèche en bas de la bulle -->
+                        <div class="absolute -bottom-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-gray-900 rotate-45"></div>
                     </div>
                 </div>
                 
-                <!-- Label de l'engin (ex: Moto, Camion...) -->
-                <span class="text-[9px] font-black text-gray-500 mt-4 rotate-45 origin-left uppercase tracking-tighter">
-                    {{ $bar['label'] }}
-                </span>
+                <!-- Label de l'engin (ex: MOTO, VOITURE) -->
+                <!-- Positionné de manière absolue pour ne pas décaler les barres -->
+                <div class="absolute top-2 w-max">
+                    <span class="inline-block text-[10px] font-black text-gray-500 rotate-45 origin-left uppercase tracking-tighter mt-1">
+                        {{ $bar['label'] }}
+                    </span>
+                </div>
             </div>
         @endforeach
     </div>
-</div>
-                    </div>
-                </div>
+
+    <!-- Espace de sécurité pour les labels inclinés (évite qu'ils soient coupés) -->
+    <div class="h-16"></div>
+</div>      </div>
 
             </div>
         </div>
