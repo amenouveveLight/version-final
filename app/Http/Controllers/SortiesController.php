@@ -511,17 +511,27 @@ class SortiesController extends Controller
   
         
 public function ticketHtml($id)
-{
-    $sortie = Sorties::findOrFail($id);
-    
-    // On récupère l'entrée correspondante pour avoir la date d'arrivée
+    {
+        $sortie = Sorties::findOrFail($id);
+        
+        // On récupère l'entrée correspondante pour avoir la date d'arrivée
     $entree = Entres::where('plaque', $sortie->plaque)
         ->where('created_at', '<=', $sortie->created_at)
         ->latest()
         ->first();
 
+    // Calcul du nombre de jours (Sécurisé au cas où il n'y a pas d'entrée)
+    if ($entree) {
+        $joursPasses = $entree->created_at->diffInDays(now()) + 1;
+    } else {
+        $joursPasses = 1;
+    }
 
-    return view('ticket-sortie', compact('sortie', 'entree'));
+    // On utilise directement le montant enregistré dans la BDD
+    $montantTotal = $sortie->montant;
+
+    // CORRECTION MAJEURE ICI : Pas de guillemets et de $ autour de joursPasses et montantTotal !
+    return view('ticket-sortie', compact('sortie', 'entree', 'joursPasses', 'montantTotal'));
 }
     
 

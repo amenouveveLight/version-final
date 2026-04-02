@@ -22,6 +22,10 @@ class Entres extends Model
 {
     return $this->hasOne(Sorties::class, 'entree_id');
 }
+   public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
 }
 
 

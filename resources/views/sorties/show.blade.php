@@ -62,9 +62,19 @@
                             <p class="text-xs text-gray-500">{{ $sortie->owner_phone ?? 'Aucun téléphone' }}</p>
                         </div>
 
+                        <!-- 🆕 Agent Responsable (SÉCURISÉ COMME L'ENTRÉE) -->
                         <div>
                             <h3 class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">Agent Responsable</h3>
-                            <p class="text-sm font-semibold text-gray-700">{{ $sortie->user->firstname ?? 'Système' }} {{ $sortie->user->lastname ?? '' }}</p>
+                            <div class="flex items-center space-x-2">
+                                <p class="text-sm font-bold text-gray-800">
+                                    {{ $sortie->user?->firstname ?? 'Système' }} {{ $sortie->user?->lastname ?? '(Ancienne Sortie)' }}
+                                </p>
+                                @if(isset($sortie->user) && $sortie->user->role)
+                                    <span class="px-2 py-0.5 bg-gray-100 text-gray-600 text-[9px] font-bold rounded uppercase">
+                                        {{ $sortie->user->role }}
+                                    </span>
+                                @endif
+                            </div>
                         </div>
                     </div>
 

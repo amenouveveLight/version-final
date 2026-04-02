@@ -82,10 +82,19 @@ class EntresController extends Controller
     }
 
     // 🔹 Affichage détail entrée
-    public function show($id)
+       public function show($id)
+
     {
-        $entree = Entres::findOrFail($id);
-        return view('entres.show', compact('entree'));
+        // On charge l'entrée avec l'utilisateur (l'agent) qui l'a créée
+        $entree = Entres::with('user')->findOrFail($id);
+
+        // On vérifie si le véhicule est déjà sorti (Nécessaire pour la vue !)
+        $hasSortie = Sorties::where('plaque', $entree->plaque)
+                            ->where('created_at', '>=', $entree->created_at)
+                            ->exists();
+
+          dd($entree->user_id, $entree->user);
+        return view('entres.show', compact('entree', 'hasSortie'));
     }
 
     // 🔹 Formulaire édition

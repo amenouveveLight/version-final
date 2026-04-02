@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="pt-28 md:pt-28 w-full bg-gray-50 min-h-screen">
+<div class="pt-24 md:pt-28 w-full bg-gray-50 min-h-screen">
     <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 pb-12">
         
         <!-- Bouton Retour -->
@@ -44,8 +44,9 @@
             <div class="p-6 sm:p-10">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                     
-                    <!-- Colonne 1 : Véhicule & Propriétaire -->
+                    <!-- Colonne 1 : Véhicule, Propriétaire & AGENT -->
                     <div class="space-y-6">
+                        <!-- Véhicule -->
                         <div>
                             <h3 class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-3">Informations Véhicule</h3>
                             <div class="flex items-center space-x-3">
@@ -56,13 +57,34 @@
                             </div>
                         </div>
 
+                        <!-- Propriétaire -->
                         <div>
                             <h3 class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">Propriétaire</h3>
                             <p class="text-sm font-bold text-gray-800">{{ $entree->name ?? 'Client Divers' }}</p>
                             <p class="text-xs text-gray-500">{{ $entree->phone ?? 'Aucun téléphone' }}</p>
                         </div>
+
+                        
+                           <!-- 🆕 Agent Responsable (SÉCURISÉ) -->
+                        <div>
+                            <h3 class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">Agent Responsable</h3>
+                            <div class="flex items-center space-x-2">
+                                <p class="text-sm font-bold text-gray-800">
+                                    {{ $entree->user?->firstname ?? 'Système' }} {{ $entree->user?->lastname ?? '(Ancien Ticket)' }}
+                                </p>
+                                @if(isset($entree->user) && $entree->user->role)
+                                    <span class="px-2 py-0.5 bg-gray-100 text-gray-600 text-[9px] font-bold rounded uppercase">
+                                        {{ $entree->user->role }}
+                                    </span>
+                                @endif
+                            </div>
+                        </div>
+
+                   
+                    
                     </div>
 
+                    
                     <!-- Colonne 2 : Horaires & Statut -->
                     <div class="space-y-6">
                         <div>
@@ -93,7 +115,7 @@
                     </div>
                 </div>
 
-                <!-- Actions (Inspiré des boutons de sortie) -->
+                <!-- Actions -->
                 <div class="mt-12 pt-8 border-t border-gray-100 flex flex-col sm:flex-row gap-4">
                     
                     {{-- Bouton Éditer --}}
