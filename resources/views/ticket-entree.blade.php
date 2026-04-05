@@ -7,8 +7,8 @@
     <style>
         /* Styles optimisés pour imprimante thermique */
         body {
-            font-family: 'Courier New', Courier, monospace; /* Police claire pour l'impression */
-            width: 300px; /* Largeur typique d'un ticket 80mm. Mettre 200px pour 58mm */
+            font-family: 'Courier New', Courier, monospace; 
+            width: 300px; 
             margin: 0 auto;
             padding: 10px;
             color: #000;
@@ -35,7 +35,6 @@
             display: flex;
             justify-content: center;
         }
-        /* Assure que le SVG du QR code s'affiche bien */
         .qr-container svg {
             max-width: 100%;
             height: auto;
@@ -78,7 +77,6 @@
 
     <!-- AFFICHAGE DU QR CODE ICI -->
     <div class="qr-container">
-        <!-- Attention : on utilise {!! !!} et non {{ }} pour ne pas échapper le code SVG -->
         {!! $qrCode !!}
     </div>
 
