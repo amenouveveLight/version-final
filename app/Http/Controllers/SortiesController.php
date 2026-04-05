@@ -373,12 +373,25 @@ class SortiesController extends Controller
         
     }
 
-    // 🔹 Affichage détail sortie
-    public function show($id)
-    {
-        $sortie = Sorties::findOrFail($id);
-        return view('sorties.show', compact('sortie'));
-    }
+    
+
+       public function show($id)
+      {
+                // On charge la sortie ET l'agent qui a fait la sortie ('user')
+                 $sortie = Sorties::with('user')->findOrFail($id);
+
+         // On cherche l'entrée correspondante (et l'agent qui a fait l'entrée)
+                     $entree = Entrees::with('user')
+                     ->where('plaque', $sortie->plaque)
+                     ->where('created_at', '<=', $sortie->created_at)
+                     ->orderBy('created_at', 'desc')
+                     ->first();
+
+                      $date_entree = $entree ? $entree->created_at : null;
+                       $agent_entree = $entree ? $entree->user : null; // On récupère l'agent d'entrée
+
+                      return view('sorties.show', compact('sortie', 'date_entree', 'agent_entree'));
+}
 
     // 🔹 Formulaire édition
     public function edit($id)
