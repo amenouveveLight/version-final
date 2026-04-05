@@ -1,125 +1,118 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <title>Ticket de Sortie</title>
-  <style>
-    @page {
-      size: 80mm auto;
-      margin: 10px;
-    }
-
-    body {
-      font-family: 'Arial', sans-serif;
-      font-size: 11px;
-      color: #111;
-      margin: 0;
-      padding: 0;
-      background-color: #fff;
-      text-align: center; /* Centrage global */
-    }
-
-    .logo {
-      max-width: 60px;
-      display: block;
-      margin: 5px auto;
-    }
-
-    .title {
-      font-size: 14px;
-      font-weight: bold;
-      margin-top: 4px;
-      padding: 6px 0;
-      border-top: 1px dashed #999;
-      border-bottom: 1px dashed #999;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-    }
-
-    .date {
-      font-size: 10px;
-      margin-bottom: 8px;
-      color: #555;
-    }
-
-    .section {
-      margin: 10px 0;
-      padding: 0 5px;
-      text-align: left; /* Les détails restent alignés à gauche */
-    }
-
-    .section-title {
-      font-weight: bold;
-      margin-bottom: 5px;
-      border-bottom: 1px solid #ccc;
-      font-size: 12px;
-      text-transform: uppercase;
-      color: #333;
-      text-align: center;
-    }
-
-    .info-line {
-      display: flex;
-      justify-content: space-between;
-      padding: 2px 0;
-      font-size: 11px;
-    }
-
-    .dashed {
-      border-top: 1px dashed #ccc;
-      margin: 12px 0;
-    }
-
-    .footer {
-      font-size: 10px;
-      margin-top: 8px;
-      color: #444;
-      line-height: 1.4;
-    }
-
-    .footer strong {
-      display: block;
-      margin-top: 3px;
-      font-size: 11px;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ticket de Sortie - {{ $sortie->plaque }}</title>
+    <style>
+        body {
+            font-family: 'Courier New', Courier, monospace;
+            width: 300px; /* Adapté pour 80mm. Mettre 200px pour 58mm */
+            margin: 0 auto;
+            padding: 10px;
+            color: #000;
+            font-size: 14px;
+        }
+        h2, h3 {
+            margin: 5px 0;
+            text-align: center;
+        }
+        .text-center { text-align: center; }
+        .text-bold { font-weight: bold; }
+        .divider { 
+            border-top: 1px dashed #000; 
+            margin: 10px 0; 
+        }
+        .info-line {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+        }
+        .montant-total {
+            font-size: 18px;
+            font-weight: bold;
+            text-align: center;
+            margin: 15px 0;
+            padding: 10px;
+            border: 2px solid #000;
+        }
+        .qr-container {
+            text-align: center;
+            margin: 15px 0;
+            display: flex;
+            justify-content: center;
+        }
+        .qr-container svg {
+            max-width: 100%;
+            height: auto;
+        }
+    </style>
 </head>
 <body>
 
-  <img src="{{ public_path('images/T.png') }}" alt="Logo" class="logo">
+    <h2>PARKING NOM_DU_PARKING</h2>
+    <h3>REÇU DE PAIEMENT</h3>
 
-  <div class="title">
-    Ticket de Sortie<br>
-    N° {{ str_pad($sortie->id, 5, '0', STR_PAD_LEFT) }}
-  </div>
+    <div class="divider"></div>
 
-  <div class="date">{{ now()->format('d/m/Y H:i') }}</div>
+    <div class="info-line">
+        <span>Reçu N°:</span>
+        <span class="text-bold">#{{ $sortie->id }}</span>
+    </div>
+    <div class="info-line">
+        <span>Plaque:</span>
+        <span class="text-bold">{{ strtoupper($sortie->plaque) }}</span>
+    </div>
+    <div class="info-line">
+        <span>Client:</span>
+        <span class="text-bold">{{ $sortie->owner_name ?? 'Inconnu' }}</span>
+    </div>
 
-  <div class="section">
-    <div class="section-title">Véhicule</div>
-    <div class="info-line"><span>Plaque :</span><span>{{ strtoupper($entree->plaque) }}</span></div>
-    <div class="info-line"><span>Type :</span><span>{{ ucfirst($entree->type) }}</span></div>
-    <div class="info-line"><span>Nom :</span><span>{{ $entree->name }}</span></div>
-    <div class="info-line"><span>Tél :</span><span>{{ $entree->phone }}</span></div>
-  </div>
+    <div class="divider"></div>
 
-  <div class="section">
-    <div class="section-title">Détails de la sortie</div>
-    <div class="info-line"><span>Entrée :</span><span>{{ $entree->created_at->format('d/m/Y H:i') }}</span></div>
-    <div class="info-line"><span>Sortie :</span><span>{{ $sortie->created_at->format('d/m/Y H:i') }}</span></div>
-    <div class="info-line"><span>Durée :</span><span>{{ $joursPasses }} jour(s)</span></div>
-    <div class="info-line"><span>Montant :</span><span><strong>{{ number_format($montantTotal, 0, ',', ' ') }} FCFA</strong></span></div>
-    <div class="info-line"><span>Paiement :</span><span>{{ ucfirst($sortie->paiement ) }}</span></div>
-       <div class="info-line"> <span>Agent  :</span> <span>{{ $sortie->user?->firstname ?? 'Système' }}</span></div> 
-  </div>
+    <div class="info-line">
+        <span>Entrée:</span>
+        <span class="text-bold">{{ $entree ? $entree->created_at->format('d/m/Y H:i') : 'Non trouvée' }}</span>
+    </div>
+    <div class="info-line">
+        <span>Sortie:</span>
+        <span class="text-bold">{{ $sortie->created_at->format('d/m/Y H:i') }}</span>
+    </div>
+    <div class="info-line">
+        <span>Durée:</span>
+        <span class="text-bold">{{ $joursPasses }} Jour(s)</span>
+    </div>
 
-  <div class="dashed"></div>
+    <div class="divider"></div>
 
-  <div class="footer">
-    Merci pour votre confiance<br>
-    À bientôt et bonne route !<br>
-    <strong>Viroscope</strong>
-  </div>
+    <div class="info-line">
+        <span>Mode de Paiement:</span>
+        <span class="text-bold">
+            @if($sortie->paiement == 'cash') Espèces 
+            @elseif($sortie->paiement == 'card') Carte 
+            @elseif($sortie->paiement == 'app') Application 
+            @else {{ strtoupper($sortie->paiement) }} 
+            @endif
+        </span>
+    </div>
+
+    <div class="montant-total">
+        TOTAL : {{ number_format($montantTotal, 0, ',', ' ') }} FCFA
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- AFFICHAGE DU QR CODE ICI -->
+    <div class="qr-container">
+        {!! $qrCode !!}
+    </div>
+
+    <div class="divider"></div>
+
+    <p class="text-center text-bold" style="font-size: 13px;">
+        Merci de votre visite et<br>
+        à très bientôt !
+    </p>
 
 </body>
 </html>

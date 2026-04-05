@@ -179,4 +179,3 @@ class EntresController extends Controller
     }
     }
 
-}

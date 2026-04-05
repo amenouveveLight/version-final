@@ -2,6 +2,9 @@
 
 @section('content')
 
+<!-- AJOUT DU CDN POUR LE SCANNER -->
+<script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+
 <div class="pt-28 md:pt-28 w-full bg-gray-50 min-h-screen">
     <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
         
@@ -41,7 +44,7 @@
                 @endif
 
                 <!-- Section Recherche -->
-                <form action="{{ route('sorties.create') }}" method="GET" class="mb-8">
+                <form action="{{ route('sorties.create') }}" method="GET" class="mb-8" id="search-form">
                     <label for="plaque" class="block text-xs sm:text-sm font-bold text-gray-700 uppercase tracking-wider mb-2">Rechercher la plaque</label>
                     <div class="flex flex-col sm:flex-row gap-2">
                         <div class="relative flex-grow">
@@ -60,19 +63,32 @@
                         <button type="submit" class="bg-gray-800 text-white px-6 py-3 rounded-lg font-bold hover:bg-black transition-all">
                             VÉRIFIER
                         </button>
+                        
+                        <!-- BOUTON SCANNER -->
+                        <button type="button" onclick="startScanner()" class="bg-blue-600 text-white px-4 py-3 rounded-lg font-bold hover:bg-blue-700 transition-all flex items-center justify-center gap-2">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm14 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z"></path></svg>
+                            SCANNER
+                        </button>
                     </div>
                     @error('plaque')
                         <p class="text-xs text-red-600 mt-2 font-bold">{{ $message }}</p>
                     @enderror
-
-
                 </form>
+
+                <!-- ZONE DE LA CAMÉRA (Cachée par défaut) -->
+                <div id="reader-container" class="hidden mb-8 p-4 bg-gray-100 rounded-lg border-2 border-dashed border-gray-300">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="font-bold text-gray-700 uppercase text-sm tracking-wider">Scanner le ticket d'entrée</h3>
+                        <button type="button" onclick="stopScanner()" class="text-red-500 hover:text-red-700 font-bold text-sm bg-red-100 px-3 py-1 rounded-full">Fermer la caméra</button>
+                    </div>
+                    <div id="reader" style="width: 100%; max-width: 500px; margin: 0 auto;"></div>
+                </div>
                     
-@if(session('success'))
-    <div class="p-4 mb-4 bg-green-100 text-green-700 rounded-lg">
-        {{ session('success') }} (Impression en cours...)
-    </div>
-@endif
+                @if(session('success'))
+                    <div class="p-4 mb-4 bg-green-100 text-green-700 rounded-lg">
+                        {{ session('success') }} (Impression en cours...)
+                    </div>
+                @endif
 
                 <hr class="mb-8 border-gray-100">
 
@@ -169,7 +185,6 @@
     </div>
 </div>
 
-
 <!-- IFRAME INVISIBLE POUR L'IMPRESSION -->
 <iframe id="print_frame" name="print_frame" style="position:absolute; top:-9999px; left:-9999px; border:none;"></iframe>
 
@@ -188,6 +203,69 @@
             };
         };
     @endif
+
+    // ==========================================
+    // SCRIPT DU SCANNER DE QR CODE
+    // ==========================================
+    let html5QrcodeScanner = null;
+
+    function startScanner() {
+        document.getElementById('reader-container').classList.remove('hidden');
+        
+        // Initialiser le scanner sur l'élément 'reader'
+        html5QrcodeScanner = new Html5Qrcode("reader");
+
+        // Configuration du scanner (caméra arrière par défaut)
+        html5QrcodeScanner.start(
+            { facingMode: "environment" }, 
+            {
+                fps: 10,
+                qrbox: { width: 250, height: 250 }
+            },
+            (decodedText, decodedResult) => {
+                // Succès : Un QR Code a été scanné !
+                
+                // 1. Extraire la plaque avec une expression régulière
+                // On cherche "PLAQUE: " suivi de n'importe quel caractère jusqu'au saut de ligne
+                let match = decodedText.match(/PLAQUE:\s*([^\n]+)/i);
+                let plaqueDetectee = "";
+
+                if (match && match[1]) {
+                    plaqueDetectee = match[1].trim();
+                } else {
+                    // Si on ne trouve pas "PLAQUE:", on prend tout le texte par sécurité
+                    plaqueDetectee = decodedText.trim();
+                }
+
+                // 2. Remplir le champ "plaque"
+                document.getElementById('plaque').value = plaqueDetectee;
+
+                // 3. Arrêter la caméra proprement
+                stopScanner();
+
+                // 4. Soumettre le formulaire de recherche automatiquement
+                document.getElementById('search-form').submit();
+            },
+            (errorMessage) => {
+                // Ignore les erreurs de scan (c'est appelé à chaque frame où il n'y a pas de QR code)
+            }
+        ).catch((err) => {
+            console.error("Erreur de lancement de la caméra", err);
+            alert("Impossible d'accéder à la caméra. Vérifiez les permissions de votre navigateur.");
+        });
+    }
+
+    function stopScanner() {
+        if (html5QrcodeScanner) {
+            html5QrcodeScanner.stop().then((ignore) => {
+                document.getElementById('reader-container').classList.add('hidden');
+            }).catch((err) => {
+                console.error("Erreur à l'arrêt du scanner", err);
+            });
+        } else {
+            document.getElementById('reader-container').classList.add('hidden');
+        }
+    }
 </script>
 
 @endsection

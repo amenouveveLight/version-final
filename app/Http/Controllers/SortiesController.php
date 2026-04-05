@@ -515,24 +515,41 @@ public function ticketHtml($id)
         $sortie = Sorties::findOrFail($id);
         
         // On récupère l'entrée correspondante pour avoir la date d'arrivée
-    $entree = Entres::where('plaque', $sortie->plaque)
-        ->where('created_at', '<=', $sortie->created_at)
-        ->latest()
-        ->first();
+        $entree = Entres::where('plaque', $sortie->plaque)
+            ->where('created_at', '<=', $sortie->created_at)
+            ->latest()
+            ->first();
 
-    // Calcul du nombre de jours (Sécurisé au cas où il n'y a pas d'entrée)
-    if ($entree) {
-        $joursPasses = $entree->created_at->diffInDays(now()) + 1;
-    } else {
-        $joursPasses = 1;
+        // Calcul du nombre de jours et gestion de la date d'entrée
+        if ($entree) {
+            $joursPasses = $entree->created_at->diffInDays(now()) + 1;
+            $dateEntreeStr = $entree->created_at->format('d/m/Y H:i:s');
+        } else {
+            $joursPasses = 1;
+            $dateEntreeStr = 'Non spécifiée';
+        }
+
+        $montantTotal = $sortie->montant;
+
+        // 1. Préparer les données à mettre dans le QR Code
+        $qrData = "TICKET SORTIE/REÇU N°: " . $sortie->id . "\n";
+        $qrData .= "PLAQUE: " . $sortie->plaque . "\n";
+        $qrData .= "TYPE: " . strtoupper($sortie->type) . "\n";
+        $qrData .= "CLIENT: " . ($sortie->owner_name ?? 'Inconnu') . "\n";
+        $qrData .= "TEL: " . ($sortie->owner_phone ?? 'Inconnu') . "\n";
+        $qrData .= "ENTRÉE: " . $dateEntreeStr . "\n";
+        $qrData .= "SORTIE: " . $sortie->created_at->format('d/m/Y H:i:s') . "\n";
+        $qrData .= "DURÉE: " . $joursPasses . " Jour(s)\n";
+        $qrData .= "MONTANT: " . $montantTotal . " FCFA\n";
+        $qrData .= "PAIEMENT: " . strtoupper($sortie->paiement);
+
+        // 2. Générer le QR code au format SVG
+        // (Assurez-vous que "use SimpleSoftwareIO\QrCode\Facades\QrCode;" est bien importé en haut du fichier, mais ça doit l'être vu que ça marche pour les entrées)
+        $qrCode = \SimpleSoftwareIO\QrCode\Facades\QrCode::size(150)->generate($qrData);
+
+        // 3. Retourner la vue
+        return view('ticket-sortie', compact('sortie', 'entree', 'joursPasses', 'montantTotal', 'qrCode'));
     }
-
-    // On utilise directement le montant enregistré dans la BDD
-    $montantTotal = $sortie->montant;
-
-    // CORRECTION MAJEURE ICI : Pas de guillemets et de $ autour de joursPasses et montantTotal !
-    return view('ticket-sortie', compact('sortie', 'entree', 'joursPasses', 'montantTotal'));
-}
     
 
     public function statsAgents(Request $request)
