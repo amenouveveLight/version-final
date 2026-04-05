@@ -157,13 +157,26 @@ class EntresController extends Controller
     }
 
     // 🔹 Affichage du ticket
+    // 🔹 Affichage du ticket
     public function ticketHtml($id)
     {
         // On récupère l'entrée par son ID
         $entree = Entres::findOrFail($id);
 
-        // On retourne la vue du ticket (le nom du fichier est ticket-entree.blade.php)
-        return view('ticket-entree', compact('entree'));
+        // 1. Préparer les données à mettre dans le QR Code (Format texte lisible ou JSON)
+        $qrData = "TICKET N°: " . $entree->id . "\n";
+        $qrData .= "PLAQUE: " . $entree->plaque . "\n";
+        $qrData .= "TYPE: " . strtoupper($entree->type) . "\n";
+        $qrData .= "NOM: " . $entree->name . "\n";
+        $qrData .= "TEL: " . $entree->phone . "\n";
+        $qrData .= "DATE ENTREE: " . $entree->created_at->format('d/m/Y H:i:s');
+
+        // 2. Générer le QR code au format SVG (Taille 150x150)
+        $qrCode = QrCode::size(150)->generate($qrData);
+
+        // 3. On retourne la vue avec l'entrée ET le QR Code
+        return view('ticket-entree', compact('entree', 'qrCode'));
+    }
     }
 
 }

@@ -110,7 +110,7 @@
     <div class="info-line"><span>Durée :</span><span>{{ $joursPasses }} jour(s)</span></div>
     <div class="info-line"><span>Montant :</span><span><strong>{{ number_format($montantTotal, 0, ',', ' ') }} FCFA</strong></span></div>
     <div class="info-line"><span>Paiement :</span><span>{{ ucfirst($sortie->paiement ) }}</span></div>
-       <div class="info-line"> <span>Caissier :</span> <span>{{ $sortie->user?->firstname ?? 'Système' }}</span></div> 
+       <div class="info-line"> <span>Agent  :</span> <span>{{ $sortie->user?->firstname ?? 'Système' }}</span></div> 
   </div>
 
   <div class="dashed"></div>

@@ -60,6 +60,7 @@
                             <option value="semaine" {{ request('periode') == 'semaine' ? 'selected' : '' }}>Cette semaine</option>
                             <option value="mois" {{ request('periode') == 'mois' ? 'selected' : '' }}>Ce mois</option>
                             <option value="année" {{ request('periode') == 'année' ? 'selected' : '' }}>Cette année</option>
+                            
                         </select>
                     </div>
 

@@ -97,15 +97,15 @@
                         <div class="max-w-md space-y-4">
                             <div>
                                 <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">Mot de passe actuel</label>
-                                <input type="password" name="current_password" class="w-full px-4 py-3 border border-gray-300 rounded-lg bg-gray-50 focus:ring-2 focus:ring-blue-500 text-sm" placeholder="••••••••">
+                                <input type="password" name="current_password" class="w-full px-4 py-3 border border-gray-300 rounded-lg bg-gray-50 focus:ring-2 focus:ring-blue-500 text-sm text-gray-700" transition placeholder="••••••••">
                             </div>
                             <div>
                                 <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">Nouveau mot de passe</label>
-                                <input type="password" name="password" class="w-full px-4 py-3 border border-gray-300 rounded-lg bg-gray-50 focus:ring-2 focus:ring-blue-500 text-sm" placeholder="Minimum 8 caractères">
+                                <input type="password" name="password" class="w-full px-4 py-3 border border-gray-300 rounded-lg bg-gray-50 focus:ring-2 focus:ring-blue-500 text-sm text-gray-700 transition" placeholder="Minimum 8 caractères">
                             </div>
                             <div>
                                 <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">Confirmer le mot de passe</label>
-                                <input type="password" name="password_confirmation" class="w-full px-4 py-3 border border-gray-300 rounded-lg bg-gray-50 focus:ring-2 focus:ring-blue-500 text-sm" placeholder="Répéter le mot de passe">
+                                <input type="password" name="password_confirmation" class="w-full px-4 py-3 border border-gray-300 rounded-lg bg-gray-50 focus:ring-2 focus:ring-blue-500 text-sm  text-gray-700 transition"  transition placeholder="Répéter le mot de passe">
                             </div>
                         </div>
 
