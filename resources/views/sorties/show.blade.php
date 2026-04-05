@@ -81,22 +81,57 @@
                     <!-- Colonne 2 : Temps & Facturation -->
                     <div class="space-y-6">
                         <div>
-                            <h3 class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-3">Horaires & Durée</h3>
-                            <div class="space-y-2">
-                                <div class="flex justify-between text-xs">
-                                    <span class="text-gray-500">Date Sortie :</span>
-                                    <span class="font-bold text-gray-800">{{ $sortie->created_at->format('d/m/Y H:i') }}</span>
-                                </div>
-                                <div class="flex justify-between text-xs">
-                                    <span class="text-gray-500">Mode de paiement :</span>
-                                    <span class="font-bold text-gray-800 uppercase italic">
-                                        @if($sortie->paiement == 'cash') Espèces 
-                                        @elseif($sortie->paiement == 'card') Carte
-                                        @else Application @endif
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
+                        <div>
+    <h3 class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-3">Horaires & Durée</h3>
+    <div class="space-y-3">
+        
+        <!-- 🆕 Date et Heure d'Entrée -->
+        <div class="flex justify-between items-center text-xs border-b border-gray-50 pb-2">
+            <span class="text-gray-500 flex items-center">
+                <svg class="w-3 h-3 mr-1 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
+                </svg>
+                Entrée :
+            </span>
+            <span class="font-bold text-gray-800">
+                {{-- ⚠️ IMPORTANT: Remplacez 'date_entree' par le vrai nom de votre colonne en base de données --}}
+                {{ $sortie->date_entree ? \Carbon\Carbon::parse($sortie->date_entree)->format('d/m/Y à H:i') : 'Non renseignée' }}
+            </span>
+        </div>
+
+        <!-- Date et Heure de Sortie (Améliorée) -->
+        <div class="flex justify-between items-center text-xs border-b border-gray-50 pb-2">
+            <span class="text-gray-500 flex items-center">
+                <svg class="w-3 h-3 mr-1 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                </svg>
+                Sortie :
+            </span>
+            <span class="font-bold text-gray-800">{{ $sortie->created_at->format('d/m/Y à H:i') }}</span>
+        </div>
+
+        <!-- 🆕 Durée totale de stationnement -->
+        @if(isset($sortie->date_entree))
+        <div class="flex justify-between items-center text-xs bg-gray-50 p-2 rounded border border-gray-100">
+            <span class="text-gray-600 font-bold">Temps passé :</span>
+            <span class="font-black text-blue-600">
+                {{ \Carbon\Carbon::parse($sortie->date_entree)->diffForHumans($sortie->created_at, true) }}
+            </span>
+        </div>
+        @endif
+
+        <!-- Mode de paiement (Existant) -->
+        <div class="flex justify-between text-xs pt-1">
+            <span class="text-gray-500">Mode de paiement :</span>
+            <span class="font-bold text-gray-800 uppercase italic">
+                @if($sortie->paiement == 'cash') Espèces 
+                @elseif($sortie->paiement == 'card') Carte
+                @else Application @endif
+            </span>
+        </div>
+    </div>
+</div>
+                    
 
                         <!-- Bloc Montant -->
                         <div class="bg-gray-50 p-4 rounded-xl border border-gray-100">
