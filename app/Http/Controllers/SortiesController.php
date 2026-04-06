@@ -390,7 +390,7 @@ class SortiesController extends Controller
                       $date_entree = $entree ? $entree->created_at : null;
                        $agent_entree = $entree ? $entree->user : null; // On récupère l'agent d'entrée
 
-                      return view('sorties.show', compact('sortie', 'date_entree', 'agent_entree'));
+                      return view('sorties.show', compact('sortie', 'entree', 'agent_entree'));
 }
 
     // 🔹 Formulaire édition

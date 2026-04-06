@@ -90,37 +90,15 @@
             <svg class="w-3 h-3 mr-1 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
             </svg>
-            Agent de Sortie
+            Heure de Sortie
         </h3>
         <div class="flex items-center space-x-2">
             <p class="text-sm font-bold text-gray-800">
-                {{ $sortie->user?->firstname ?? 'Système' }} {{ $sortie->user?->lastname ?? '' }}
+                {{ $sortie->created_at->isoFormat('DD/MM/YYYY [à] HH:mm') }}
             </p>
-            @if(isset($sortie->user) && $sortie->user->role)
-                <span class="px-2 py-0.5 bg-white text-gray-600 text-[9px] font-bold rounded border border-gray-200 uppercase">
-                    {{ $sortie->user->role }}
-                </span>
-            @endif
+            
         </div>
     </div>
-
-    <!-- Agent d'Entrée (Si trouvé) -->
-    @if(isset($agent_entree))
-    <div class="border-t border-gray-200 pt-3">
-        <h3 class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1 flex items-center">
-            <svg class="w-3 h-3 mr-1 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
-            </svg>
-            Agent d'Entrée
-        </h3>
-        <div class="flex items-center space-x-2">
-            <p class="text-sm font-bold text-gray-800">
-                {{ $agent_entree->firstname ?? 'Système' }} {{ $agent_entree->lastname ?? '' }}
-            </p>
-        </div>
-    </div>
-    @endif
-
 </div>
                     
 
