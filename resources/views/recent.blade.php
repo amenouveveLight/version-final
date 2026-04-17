@@ -11,36 +11,37 @@
                 <h1 class="text-2xl sm:text-3xl font-bold text-gray-800">Historique des activités</h1>
                 <p class="text-sm text-gray-500">Consultez et filtrez tous les mouvements du parking.</p>
             </div>
-            <div class="bg-white p-2 rounded-lg shadow-sm border border-gray-100 inline-flex items-center">
-                <span class="flex h-3 w-3 relative mr-2">
-                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-                    <span class="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
-                </span>
-                <span class="text-xs font-bold text-gray-600 uppercase tracking-widest">Mise à jour en direct</span>
+            
+            <div class="flex items-center gap-3">
+                <!-- BOUTON SYNCHRO (Apparaît seulement s'il y a des données offline) -->
+                <button id="sync-btn" onclick="window.synchroniserTout()" class="hidden bg-orange-600 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded-lg shadow-lg flex items-center space-x-2 animate-pulse transition-all">
+                    <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                    </svg>
+                    <span>SYNCHRONISER (<span id="offline-count">0</span>)</span>
+                </button>
+
+                <div class="bg-white p-2 rounded-lg shadow-sm border border-gray-100 inline-flex items-center">
+                    <span class="flex h-3 w-3 relative mr-2">
+                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                        <span class="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
+                    </span>
+                    <span class="text-xs font-bold text-gray-600 uppercase tracking-widest">Mise à jour en direct</span>
+                </div>
             </div>
         </div>
 
-        <!-- Section Filtrage (Style Dashboard) -->
+        <!-- Section Filtrage -->
         <div class="bg-white rounded-xl shadow-md border border-gray-100 p-5 mb-8">
             <form method="GET" action="{{ route('recent') }}">
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 items-end">
-                    
                     <!-- Plaque -->
                     <div>
                         <label for="plaque" class="block text-xs font-bold text-gray-500 uppercase mb-2">Plaque</label>
-                        <div class="relative">
-                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                <svg class="h-4 w-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                                </svg>
-                            </div>
-                            <input type="text" name="plaque" id="plaque" value="{{ request('plaque') }}"
-                                placeholder="Rechercher..."
-                                class="w-full pl-9 pr-4 py-2 border border-gray-300 rounded-lg bg-gray-50 focus:ring-2 focus:ring-green-500 text-sm">
-                        </div>
+                        <input type="text" name="plaque" id="plaque" value="{{ request('plaque') }}" placeholder="Rechercher..." class="w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-50 focus:ring-2 focus:ring-green-500 text-sm">
                     </div>
 
-                    <!-- Type de véhicule -->
+                    <!-- Type -->
                     <div>
                         <label for="type" class="block text-xs font-bold text-gray-500 uppercase mb-2">Type d'engin</label>
                         <select name="type" id="type" class="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-50 focus:ring-2 focus:ring-green-500 text-sm font-semibold text-gray-700">
@@ -59,17 +60,11 @@
                             <option value="jour" {{ request('periode') == 'jour' ? 'selected' : '' }}>Aujourd'hui</option>
                             <option value="semaine" {{ request('periode') == 'semaine' ? 'selected' : '' }}>Cette semaine</option>
                             <option value="mois" {{ request('periode') == 'mois' ? 'selected' : '' }}>Ce mois</option>
-                            <option value="année" {{ request('periode') == 'année' ? 'selected' : '' }}>Cette année</option>
-                            
                         </select>
                     </div>
 
-                    <!-- Bouton Rechercher -->
                     <div>
                         <button type="submit" class="w-full bg-gray-800 hover:bg-black text-white font-bold py-2 px-4 rounded-lg transition-all flex items-center justify-center space-x-2">
-                            <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
-                            </svg>
                             <span>FILTRER</span>
                         </button>
                     </div>
@@ -77,7 +72,7 @@
             </form>
         </div>
 
-        <!-- Tableau des activités (Style Dashboard) -->
+        <!-- Tableau des activités -->
         <div class="bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden">
             <div class="overflow-x-auto">
                 <table class="min-w-full divide-y divide-gray-200">
@@ -86,112 +81,118 @@
                             <th class="px-4 py-4 text-left text-[10px] font-bold text-gray-500 uppercase tracking-wider">Date & Heure</th>
                             <th class="px-4 py-4 text-left text-[10px] font-bold text-gray-500 uppercase tracking-wider">Véhicule</th>
                             <th class="px-4 py-4 text-left text-[10px] font-bold text-gray-500 uppercase tracking-wider">Propriétaire</th>
-                            <th class="px-4 py-4 text-center text-[10px] font-bold text-gray-500 uppercase tracking-wider">Durée</th>
+                            <th class="px-4 py-4 text-center text-[10px] font-bold text-gray-500 uppercase tracking-wider">Montant</th>
                             <th class="px-4 py-4 text-center text-[10px] font-bold text-gray-500 uppercase tracking-wider">Statut</th>
                             <th class="px-4 py-4 text-right text-[10px] font-bold text-gray-500 uppercase tracking-wider">Actions</th>
                         </tr>
                     </thead>
-                    <tbody class="bg-white divide-y divide-gray-100">
+                    <tbody id="activite-body" class="bg-white divide-y divide-gray-100">
+                        <!-- LES DONNÉES OFFLINE SERONT INJECTÉES ICI PAR JS -->
+
                         @forelse ($activites as $act)
                         <tr class="hover:bg-gray-50 transition-colors">
-                            <!-- Date -->
                             <td class="px-4 py-4 whitespace-nowrap">
                                 <div class="text-xs font-bold text-gray-900">{{ $act['date'] }}</div>
                                 <div class="text-[10px] text-gray-400 uppercase">{{ $act['evenement'] }}</div>
                             </td>
-                            <!-- Véhicule -->
                             <td class="px-4 py-4 whitespace-nowrap">
                                 <div class="flex items-center">
                                     <div class="text-sm font-extrabold text-green-700 bg-green-50 px-2 py-1 rounded border border-green-100 uppercase">{{ $act['plaque'] }}</div>
                                     <span class="ml-2 text-[10px] text-gray-400 italic">({{ $act['type'] }})</span>
                                 </div>
                             </td>
-                            <!-- Nom -->
                             <td class="px-4 py-4 whitespace-nowrap">
                                 <div class="text-xs text-gray-700 font-medium">{{ $act['name'] ?? 'Inconnu' }}</div>
                             </td>
-                            <!-- Durée -->
                             <td class="px-4 py-4 whitespace-nowrap text-center">
-                                <div class="text-xs text-gray-600">{{ $act['duree'] ?? '--' }}</div>
+                                <div class="text-xs font-bold text-gray-600">{{ isset($act['montant']) ? $act['montant'].' F' : '--' }}</div>
                             </td>
-                            <!-- Statut -->
                             <td class="px-4 py-4 whitespace-nowrap text-center">
-                                @if ($act['statut'] === 'Complété')
-                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-green-100 text-green-800 uppercase shadow-sm">
-                                        <svg class="w-2 h-2 mr-1" fill="currentColor" viewBox="0 0 8 8"><circle cx="4" cy="4" r="3"></circle></svg>
-                                     {{ $act['statut'] }}
-                                    </span>
-                                @else
-                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-yellow-100 text-yellow-800 uppercase shadow-sm">
-                                        <svg class="w-2 h-2 mr-1" fill="currentColor" viewBox="0 0 8 8"><circle cx="4" cy="4" r="3"></circle></svg>
-                                        {{ $act['statut'] }}
-                                    </span>
-                                @endif
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-blue-100 text-blue-800 uppercase shadow-sm">
+                                    ☁️ Synchro
+                                </span>
                             </td>
-                            <!-- Actions -->
                             <td class="px-4 py-4 whitespace-nowrap text-right text-xs">
-                                @if ($act['source'] === 'entree')
-                                    <a href="{{ route('entres.show', $act['id']) }}" class="text-blue-600 hover:text-blue-900 font-bold flex items-center justify-end group">
-                                        <span>Détails</span>
-                                        <svg class="w-4 h-4 ml-1 transform group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" /></svg>
-                                    </a>
-                                @else
-                                    <a href="{{ route('sorties.show', $act['id']) }}" class="text-orange-600 hover:text-orange-900 font-bold flex items-center justify-end group">
-                                        <span>Détails</span>
-                                        <svg class="w-4 h-4 ml-1 transform group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" /></svg>
-                                    </a>
-                                @endif
+                                <a href="{{ route($act['source'] === 'entree' ? 'entres.show' : 'sorties.show', $act['id']) }}" class="text-blue-600 font-bold">Détails</a>
                             </td>
                         </tr>
                         @empty
-                        <tr>
-                            <td colspan="6" class="px-6 py-10 text-center text-gray-500 italic">
-                                <svg class="mx-auto h-12 w-12 text-gray-200 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                                </svg>
-                                Aucune activité trouvée pour ces critères.
-                            </td>
+                        <tr id="empty-row">
+                            <td colspan="6" class="px-6 py-10 text-center text-gray-500 italic">Aucune activité enregistrée.</td>
                         </tr>
                         @endforelse
                     </tbody>
                 </table>
             </div>
 
-            <!-- Pagination Stylisée -->
+            <!-- Pagination -->
             @if ($activites->hasPages())
             <div class="bg-gray-50 px-4 py-4 border-t border-gray-100 flex items-center justify-center">
-                <nav class="inline-flex shadow-sm rounded-md overflow-hidden border border-green-200">
-                    {{-- Page Précédente --}}
-                    @if ($activites->onFirstPage())
-                        <span class="px-3 py-2 bg-white text-gray-300 cursor-not-allowed">‹</span>
-                    @else
-                        <a href="{{ $activites->previousPageUrl() }}" class="px-3 py-2 bg-white text-green-600 hover:bg-green-50">‹</a>
-                    @endif
-
-                    {{-- Numéros de page --}}
-                    @foreach ($activites->getUrlRange(max(1, $activites->currentPage() - 2), min($activites->lastPage(), $activites->currentPage() + 2)) as $page => $url)
-                        @if ($page == $activites->currentPage())
-                            <span class="px-4 py-2 bg-green-600 text-white font-bold">{{ $page }}</span>
-                        @else
-                            <a href="{{ $url }}" class="px-4 py-2 bg-white text-green-600 hover:bg-green-50">{{ $page }}</a>
-                        @endif
-                    @endforeach
-
-                    {{-- Page Suivante --}}
-                    @if ($activites->hasMorePages())
-                        <a href="{{ $activites->nextPageUrl() }}" class="px-3 py-2 bg-white text-green-600 hover:bg-green-50">›</a>
-                    @else
-                        <span class="px-3 py-2 bg-white text-gray-300 cursor-not-allowed">›</span>
-                    @endif
-                </nav>
+                {{ $activites->appends(request()->query())->links() }}
             </div>
             @endif
         </div>
-
-        <div class="mt-8 text-center">
-            <p class="text-[10px] text-gray-400 font-bold uppercase tracking-[0.2em]">Parking Pro - Historique sécurisé</p>
-        </div>
     </div>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', async () => {
+        const tableBody = document.getElementById('activite-body');
+        const syncBtn = document.getElementById('sync-btn');
+        const offlineCount = document.getElementById('offline-count');
+        const emptyRow = document.getElementById('empty-row');
+
+        // 1. Récupération des données offline (Dexie)
+        const entreesOffline = await db.entrees.where('synced', 0).toArray();
+        const sortiesOffline = await db.sorties.where('synced', 0).toArray();
+        const allOffline = [...entreesOffline, ...sortiesOffline].sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+
+        if (allOffline.length > 0) {
+            // Affichage du bouton de synchro
+            syncBtn.classList.remove('hidden');
+            offlineCount.innerText = allOffline.length;
+            if(emptyRow) emptyRow.classList.add('hidden');
+
+            // 2. Injection des lignes offline dans le tableau
+            allOffline.forEach(item => {
+                const isSortie = item.montant !== undefined;
+                const row = document.createElement('tr');
+                row.className = "bg-orange-50 hover:bg-orange-100 transition-colors border-l-4 border-orange-500";
+                
+                const dateObj = new Date(item.created_at);
+                const dateStr = dateObj.toLocaleDateString('fr-FR');
+                const timeStr = dateObj.toLocaleTimeString('fr-FR', {hour: '2-digit', minute:'2-digit'});
+
+                row.innerHTML = `
+                    <td class="px-4 py-4 whitespace-nowrap">
+                        <div class="text-xs font-bold text-orange-900">${dateStr} ${timeStr}</div>
+                        <div class="text-[10px] text-orange-500 uppercase font-bold">${isSortie ? 'Sortie' : 'Entrée'}</div>
+                    </td>
+                    <td class="px-4 py-4 whitespace-nowrap">
+                        <div class="flex items-center">
+                            <div class="text-sm font-extrabold text-orange-700 bg-orange-100 px-2 py-1 rounded border border-orange-200 uppercase">${item.plaque}</div>
+                            <span class="ml-2 text-[10px] text-orange-400 italic">(${item.type})</span>
+                        </div>
+                    </td>
+                    <td class="px-4 py-4 whitespace-nowrap">
+                        <div class="text-xs text-orange-700 font-medium">${item.name || item.owner_name || 'Inconnu'}</div>
+                    </td>
+                    <td class="px-4 py-4 whitespace-nowrap text-center">
+                        <div class="text-xs font-bold text-orange-600">${isSortie ? item.montant + ' F' : '--'}</div>
+                    </td>
+                    <td class="px-4 py-4 whitespace-nowrap text-center">
+                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-orange-200 text-orange-800 uppercase shadow-sm">
+                            📴 Local
+                        </span>
+                    </td>
+                    <td class="px-4 py-4 whitespace-nowrap text-right text-xs">
+                        <span class="text-orange-400 italic">En attente...</span>
+                    </td>
+                `;
+                tableBody.prepend(row);
+            });
+        }
+    });
+</script>
 
 @endsection
